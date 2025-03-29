@@ -1,4 +1,5 @@
-export const ws = new WebSocket('ws://https://working-project-teamsync.up.railway.app')
+export const ws = new WebSocket('wss://working-project-teamsync.up.railway.app');
+
 
 export function connectToWs(handleMessage:any) {
     ws.addEventListener('message', handleMessage);
