@@ -27,9 +27,10 @@ const refreshTokenSecret = process.env.JWT_REFRESH_SECRET
 app.use(express.json());
 
 app.use(cors({
-    origin: ['http://localhost:5173'],
-    credentials: true
-}))
+  origin: ['https://working-project-teamsync.up.railway.app'], // Разрешаем запросы с фронта
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 
 app.use("/uploads", express.static("uploads")); // Раздаём загруженные файлы
 
