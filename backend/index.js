@@ -7,7 +7,6 @@ const userCommand = require('./command/userCommand/userCommand.route.js');
 const message = require('./messages/messages.route.js');
 const analyzeTaskUser = require('./analyzeUser/analyzeUser.route.js');
 const analyzeTaskAdmin = require('./analyzeAdmin/analyzeAdmin.route.js')
-const jwtSecret = 'aaifja89fjas98jfasfj8';
 const jwt = require('jsonwebtoken')
 const ws = require('ws');
 const cors = require('cors');
@@ -27,9 +26,19 @@ const refreshTokenSecret = process.env.JWT_REFRESH_SECRET
 app.use(express.json());
 
 app.use(cors({
-   origin: '*',
-  credentials: true
+  origin: '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.sendStatus(204);
+});
+
 
 app.use("/uploads", express.static("uploads")); // Раздаём загруженные файлы
 
