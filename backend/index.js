@@ -26,7 +26,7 @@ const refreshTokenSecret = process.env.JWT_REFRESH_SECRET
 app.use(express.json());
 
 app.use(cors({
-  origin: '*',
+  origin: 'https://teamsync-working-project.up.railway.app/',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -90,8 +90,13 @@ app.use((req, res) => {
   res.status(404).json({ message: "404 - Не найдено" });
 });
 
+app.use((req, res, next) => {
+  console.log('Origin:', req.headers.origin);
+  next();
+});
 
-const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+const server = app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
 const wss = new ws.WebSocketServer({server});
 
 wss.on('connection', (connection, req)=>{
