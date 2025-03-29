@@ -26,7 +26,7 @@ const refreshTokenSecret = process.env.JWT_REFRESH_SECRET
 app.use(express.json());
 
 app.use(cors({
-  origin: 'https://teamsync-working-project.up.railway.app/',
+  origin: '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

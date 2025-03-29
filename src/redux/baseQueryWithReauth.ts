@@ -1,7 +1,6 @@
 // @ts-nocheck
 import getBaseUrl from "../features/getBaseUrl.ts";
 import authSlice from './reduxSlice/authSlice.ts';
-
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
