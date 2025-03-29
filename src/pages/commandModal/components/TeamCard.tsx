@@ -32,7 +32,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team, onClick, isActive }) => {
       <div className="flex space-x-4">
         <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
           <img 
-            src={team.file ? `http://localhost:3000/uploads/${team.file}` : TeamPage}
+            src={team.file ? `https://working-project-teamsync.up.railway.app/uploads/${team.file}` : TeamPage}
             alt={team.commandName} 
             className="object-cover w-full h-full"
             loading="lazy"

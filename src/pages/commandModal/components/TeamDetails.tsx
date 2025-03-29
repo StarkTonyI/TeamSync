@@ -49,7 +49,7 @@ useEffect(()=>{
       <div className="relative w-full h-48 rounded-xl overflow-hidden mb-6">
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10"></div>
         <img 
-          src={team.file ? `http://localhost:3000/uploads/${team.file}` : TeamPage}
+          src={team.file ? `https://working-project-teamsync.up.railway.app/uploads/${team.file}` : TeamPage}
           alt={team.commandName} 
           className="w-full h-full object-cover"
           loading="lazy"
