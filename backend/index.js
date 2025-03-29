@@ -27,8 +27,7 @@ const refreshTokenSecret = process.env.JWT_REFRESH_SECRET
 app.use(express.json());
 
 app.use(cors({
-  origin: ['https://working-project-teamsync.up.railway.app'], // Разрешаем запросы с фронта
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+   origin: '*',
   credentials: true
 }));
 
@@ -83,7 +82,7 @@ app.use((req, res) => {
 });
 
 
-const server = app.listen(PORT);
+const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 const wss = new ws.WebSocketServer({server});
 
 wss.on('connection', (connection, req)=>{
