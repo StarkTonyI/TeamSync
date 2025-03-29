@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+ 
+  
+  .find-command-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    visibility: visible;
+  }
+  
+  .find-command-modal-content {
+    background-color: #181818; 
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    transition: all 1.5s ease;
+  }
+  .find-command-modal-content.active{
+    margin-left: 500px;
+  }
+  
+  .find-command-search-container {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .find-command-search-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: none;
+    background-color: #252525; 
+    color: #ffffff;
+    font-size: 16px;
+  }
+  
+  .find-command-search-input::placeholder {
+    color: #666; 
+  }
+  
+  .find-command-user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    max-height: 400px;
+  }
+  
+  .find-command-user-item {
+    display: flex;
+    align-items: center;
+    background-color: #222;
+    border-radius: 8px;
+    padding: 15px;
+    transition: background-color 0.3s;
+    border: 1px solid #333; 
+  }
+  
+  .find-command-user-item:hover {
+    background-color: #333; 
+  }
+  
+  .find-command-user-item img {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin-right: 15px;
+    border: 2px solid #444;  
+  }
+  
+  .find-command-user-item .find-command-details {
+    flex: 1;
+  }
+  
+  .find-command-user-item .find-command-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+  .find-command-user-item .find-command-description {
+    font-size: 14px;
+    color: #aaa;  
+  }
+  
+  
