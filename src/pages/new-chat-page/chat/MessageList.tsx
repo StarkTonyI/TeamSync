@@ -55,7 +55,6 @@ export default function MessageList({
   const deleteOptionMessage = (id: string, sender:string) => {
     setDeleteMessageList(prev => [...prev, { id, sender }]);
   }
-  console.log(messages);
 
 return (
   <div className="flex-1  overflow-y-auto p-6 space-y-4 text-base sm:text-lg md:text-xl">

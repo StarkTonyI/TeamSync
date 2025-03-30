@@ -31,14 +31,10 @@ export default function ChatContactContent({ contact, onClick, status, contactId
     if (data && profile?.id || messages) {
 
       const filteredMessage = MessageFilter(contactId, profile?.id, data);
-      //console.log(filteredMessage);
       if(messages.length && contactId){
         const correctMessageUser = (
           messages[0].recipient === contactId || messages[0].sender === contactId
         );
-        
-        console.log(typeof contactId, typeof messages[0].recipient, typeof messages[0].sender);
-
         if(correctMessageUser){
           setLastMessage(getLatestItem(messages))
         }    

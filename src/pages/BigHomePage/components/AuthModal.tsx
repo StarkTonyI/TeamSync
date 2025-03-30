@@ -58,8 +58,6 @@ const onSubmit = async (data: object) => {
     }
   };
  
-
-
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="glass-modal sm:max-w-md">

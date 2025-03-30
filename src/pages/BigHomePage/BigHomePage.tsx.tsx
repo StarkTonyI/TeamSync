@@ -5,11 +5,13 @@ import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 import AuthModal from './components/AuthModal';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useGetProfileQuery } from '../../redux/authApi/authApi';
 
 const BigHomePage = () => {
   //const [isAuthModalOpenState, setIsAuthModalOpenState ] = useState(false);
   //const [authTypeState, setAuthTypeState] = useState<'login' | 'register'>('login');
   
+  const { data } = useGetProfileQuery({});  
   const location = useLocation();
 
   // Проверяем, нужно ли открыть модальное окно
@@ -18,13 +20,13 @@ const BigHomePage = () => {
 
   const navigate = useNavigate();
 
- 
-
   const openAuthModal = (type: 'login' | 'register') => {
+    if (data){
+      navigate(`/${data?.role}`)
+  }else{
     navigate(`/${type}`, { replace: false });
-    //setAuthTypeState(type);
-    //setIsAuthModalOpenState(true);
-  };
+  }
+};
   
   return (
     <div className="min-h-screen flex flex-col">

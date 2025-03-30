@@ -16,7 +16,7 @@ const path = require('path');
 const { default: mongoose } = require('mongoose');
 const { authMiddleware } = require('../authMiddlewares/authMiddlewares.js');
 express().use(cors({
-  origin: 'https://team-sync-gamma.vercel.app',
+    origin:process.env.FRONTEND_URL,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -136,7 +136,7 @@ router.put('/profile/edit',authMiddleware, async(req, res)=>{
     } 
 });
 
-router.put('/profile/leave/:id',authMiddleware, async(req, res)=>{
+router.put('/profile/leave/:id', async(req, res)=>{
     try {
         res.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'strict' });
         res.status(200).json('You logout');

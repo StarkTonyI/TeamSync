@@ -60,10 +60,12 @@ const UserProfile = () => {
       localStorage.removeItem('role');
       dispath(logout());
       await leaveProfile(data.id).unwrap(); 
+      
       navigate('/');
       setTimeout(()=>{
         window.location.reload();
       }, 400);
+   
     } catch (error) {
       toast({
         title: "Logging out...",

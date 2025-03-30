@@ -19,18 +19,19 @@ const multer = require('multer');
 const path = require('path');
 require('dotenv').config();
 const { auth, checkRole, authMiddleware } = require("./authMiddlewares/authMiddlewares.js");
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 const accessTokenSecret = process.env.JWT_SECRET;
 const refreshTokenSecret = process.env.JWT_REFRESH_SECRET
 
 app.use(express.json());
 
 app.use(cors({
-  origin: 'https://team-sync-gamma.vercel.app',
+  origin: process.env.FRONTEND_URL,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 /*
 app.options('*', (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -89,12 +90,6 @@ app.use((req, res, next) => {
 app.use((req, res) => {
   res.status(404).json({ message: "404 - Не найдено" });
 });
-
-app.use((req, res, next) => {
-  console.log('Origin:', req.headers.origin);
-  next();
-});
-
 
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
 const wss = new ws.WebSocketServer({server});
