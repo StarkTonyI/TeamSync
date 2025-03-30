@@ -17,7 +17,7 @@ function updateArrayStatus(arr1, arr2) {
          !== item.completed ? map.get(item._id.toString()) : item.completed
     }));
 }
-app.use(cors({
+express().use(cors({
   origin: 'https://team-sync-gamma.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

@@ -15,12 +15,13 @@ const fs = require('fs');
 const path = require('path');
 const { default: mongoose } = require('mongoose');
 const { authMiddleware } = require('../authMiddlewares/authMiddlewares.js');
-app.use(cors({
+express().use(cors({
   origin: 'https://team-sync-gamma.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, "uploads/"), // Папка для сохранения

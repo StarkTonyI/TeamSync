@@ -7,7 +7,8 @@ express().use(cookie());
 const Command = require('../command/command.model.js');
 const User = require('../auth/auth.module.js');
 const mongoose = require('mongoose');
-app.use(cors({
+
+express().use(cors({
   origin: 'https://team-sync-gamma.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
