@@ -8,12 +8,13 @@ express().use(express.json());
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-express().use(
-  cors({
-    origin: 'http://localhost:5173', // Replace with your frontend's URL
-    credentials: true, // Allow cookies to be sent
-  })
-);
+app.use(cors({
+  origin: 'https://team-sync-gamma.vercel.app',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 
 function updateCommandCompleted(commandFilter, targetId) {
   commandFilter.forEach(command => {
