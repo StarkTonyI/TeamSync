@@ -123,13 +123,12 @@ return (
                                         { <NotificationModal/> }
                                     </div>
                                     <div>
-                                        <img 
-                                            onClick={() => setOpenProfileList(true)}
-                                            width={"80px"} 
-                                            height={"80px"} 
-                                            src={data?.image ? data?.image : userPage} 
-                                            alt="profile-icon" 
-                                        />
+                          
+                            <img 
+                                onClick={()=>setOpenProfileList(true)}
+                                width={"80px"} height={"80px"} className='
+                                w-[80px] h-[80px] rounded-full object-cover
+                                ' src={ data?.image || userPage } alt="profile-icon" />
                                         
                                         { profileList && <ProfileList onClick={deleteOrEditFunction} role={data?.role}/> }
                                     </div>

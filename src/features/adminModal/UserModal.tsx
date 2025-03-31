@@ -64,8 +64,11 @@ const TruncateText = (text:string, maxLength = 17 ) => {
           <div className="relative p-6 space-y-6">     
             <div className="flex items-start gap-6">
              <div className="relative">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center border-2 border-modal-border shadow-lg">
-                  <img src={logo && (logo[0].imageUrl ? logo[0].imageUrl : userPng) }  alt="user" />
+                <div className="w-26 h-26 rounded-full bg-gradient-to-br from-gray-700 
+                o-gray-900 flex items-center justify-center border-2 border-modal-border shadow-lg">
+                  <img src={logo && (logo[0].imageUrl ? logo[0].imageUrl : userPng) } 
+                  className=' w-[120px] h-[120px] rounded-full object-cover'
+                  alt="user" />
                 </div>
                 <div className="absolute bottom-1 right-1">
                   <span className="flex h-3 w-3">

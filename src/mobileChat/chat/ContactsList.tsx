@@ -89,7 +89,7 @@ useEffect(() => {
               <img
                 src={logo && (logo[0]?.imageUrl ? logo[0].imageUrl : userPng)}
                 alt={contact}
-                className="rounded-full"
+                className="rounded-full h-12 w-12 object-cover"
               />
             </Avatar>
             {status == 'online' && (

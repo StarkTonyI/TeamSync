@@ -9,12 +9,12 @@
     position: absolute;
     background-color: white; /* Optional: Set background for better visibility */
     transform: translate(-50%, -50%);
-    z-index: 1; /* Bring it above the blurred overlay */
+    z-index: 100; /* Bring it above the blurred overlay */
   }
   
   .spinner div {
     position: absolute;
-    z-index: 1;
+    z-index: 100;
     width: 50%;
     height: 150%;
     background: white;

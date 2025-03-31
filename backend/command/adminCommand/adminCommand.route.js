@@ -181,7 +181,7 @@ router.post('/fetch/user/logo', async(req, res) => {
   
     //const dataMap = data.map(i => ({ i_id: i._id, imageUrl: i.imageUrl }));
 
-    res.status(212).json(data);
+    res.status(200).json(data);
   }catch(err){
     res.status(404).json('Not' + err);
   }

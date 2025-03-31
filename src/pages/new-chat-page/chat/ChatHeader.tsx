@@ -20,9 +20,7 @@ export function ChatHeader({ name, status, onClick }: ChatHeaderProps) {
       </div>
     
       <div className="flex items-center gap-4">
-  
-        <div className="p-2 rounded-full hover:bg-chat-lighter/30 transition-colors">
-        
+        <div className="p-2 rounded-full  transition-colors">
           <DeleteMessageTrashIcon onClick={onClick}/>
         </div>
       </div>

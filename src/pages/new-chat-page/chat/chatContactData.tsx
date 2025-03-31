@@ -50,6 +50,7 @@ export default function ChatContactContent({ contact, onClick, status, contactId
   }
 }, [profile, data, messages]);
 
+  console.log(logo);
 
   return <div
     key={contact}
@@ -60,7 +61,9 @@ export default function ChatContactContent({ contact, onClick, status, contactId
   <div className="flex items-center gap-3">
     <div className="relative">
       <div className="w-12 h-12 rounded-full bg-chat-lighter flex items-center justify-center">
-        <img src={ logo && logo[0]?.imageUrl || userPng } alt="userLogo" />
+        <img src={ logo && logo[0]?.imageUrl || userPng } alt="userLogo" 
+        className='w-12 h-12 rounded-full object-cover'
+        />
       </div>
 
     {

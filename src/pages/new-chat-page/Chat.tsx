@@ -82,6 +82,9 @@ export function NewChat({ chatOpen, setChatOpen }:ChatPage) {
   Object.keys(onlinePeopleArray).forEach(id => delete offlinePeopleArray[id]);
   const offlinePeopleExclOurUser = { ...offlinePeopleArray };
 
+  console.log(onlinePeopleArray);
+  console.log(offlinePeopleArray)
+
   useEffect(() => {
     connectToWs(handleMessage);
   }, []);
@@ -146,10 +149,21 @@ export function NewChat({ chatOpen, setChatOpen }:ChatPage) {
 }, [userCommand, id, adminData]);
 
   useEffect(()=>{
-   async function fetchUsersLogoFunction(){
-    if(isEmpty(onlinePeopleArray) && isEmpty(offlinePeopleArray)){
+   
+    async function fetchUsersLogoFunction(){
+
+      if(isEmpty(onlinePeopleArray) || isEmpty(offlinePeopleArray)){
+      
       const usersLogoList = { ...onlinePeopleArray, ...offlinePeopleArray };
-      const userLogo = await fetchUsersLogo(usersLogoList).unwrap();
+
+      try {
+        const userLogo = await fetchUsersLogo(usersLogoList).unwrap();
+        setUsersLogo(userLogo);
+      } catch (error) {
+        console.error("Ошибка при получении логотипов:", error);
+      }
+    
+      
       setUsersLogo(userLogo);
     }
   }
@@ -179,6 +193,8 @@ export function NewChat({ chatOpen, setChatOpen }:ChatPage) {
   const onClickHandler = useCallback(() => {
   setDeleteMessageSignal(prev => !prev);
 }, []);
+
+console.log(usersLogo);
 
 return (
     <>

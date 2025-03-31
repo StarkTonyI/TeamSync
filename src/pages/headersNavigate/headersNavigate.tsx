@@ -33,7 +33,7 @@ function PageNavigate(type:string){
 return <div onClick={(e)=>e.stopPropagation()}>
    <div>
     <img 
-        className=""
+        className='w-[80px] h-[80px] rounded-full object-cover'
         onClick={() => setOpenProfileList(true)}
         width={"80px"} 
         height={"80px"} 

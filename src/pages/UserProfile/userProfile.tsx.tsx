@@ -15,6 +15,7 @@ import { logout } from "../../redux/reduxSlice/authSlice.ts";
 import { useNavigate } from "react-router-dom";
 import HeadersNavigate from "../headersNavigate/headersNavigate.tsx";
 import getBaseUrl from "../../features/getBaseUrl.ts";
+import Spinner from "../../features/spinner/spinner.tsx";
 
 interface EditTask {
   name:string, 
@@ -33,7 +34,7 @@ const UserProfile = () => {
   // @ts-ignore
   const tokenState = useSelector(state => state.auth.accessToken);
   const [userForEdit, setUserForEdit] = useState<EditTask>()
-
+  const [loading, setLoading] = useState(false);
   useEffect(()=>{
     if(data){
       setUserForEdit({
@@ -99,6 +100,7 @@ const UserProfile = () => {
     
     const file = event.target.files[0];
     if (!file) return;
+    setLoading(true);
     const formData = new FormData();
     formData.append("image", file);
     try {
@@ -109,20 +111,27 @@ const UserProfile = () => {
         },
         withCredentials: true 
       });
+  
       setImage(response.data.imageUrl); 
       setTimeout(()=>{
+        setLoading(false);
         window.location.reload();
       }, 800);
     } catch (error) {
+      setLoading(false);
+      window.location.reload();
       console.error("Ошибка при загрузке файла:", error);
     }
 };
-  if(!data){
+  if(!data || loading){
     return <Loader className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 "/>
   }
+
   return (
+
     <div className="min-h-screen relative bg-[rgb(10,11,31)] p-6 md:p-8 mx-auto ">
-        
+     
+
         <div className="absolute right-4 top-1">
             <HeadersNavigate image={image}/>
           </div>
@@ -140,8 +149,7 @@ const UserProfile = () => {
             initial={{ scale: 0.5 }}
             animate={{ scale: 1 }}
             className="flex items-center justify-center ">
-      <div 
-        className="relative w-64 h-64 cursor-pointer"
+      <div className="relative w-64 h-64 cursor-pointer"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -149,8 +157,7 @@ const UserProfile = () => {
       <img 
         src={image || data?.image || UserPng}
         alt="Base"     
-        className={`
-          w-full h-full object-cover 
+        className={`w-full h-full rounded-full object-cover 
           transition-opacity duration-50 ${isHovered ? "opacity-30" : "opacity-100"} 
           `}/>
       {isHovered && (

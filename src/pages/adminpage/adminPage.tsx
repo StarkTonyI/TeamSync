@@ -129,9 +129,10 @@ export default function AdminPage() {
                                 </div>
                             <div> 
                             <img 
-                            
                                 onClick={()=>setOpenProfileList(true)}
-                                width={"80px"} height={"80px"} src={data?.image ? data?.image : profileIcon} alt="profile-icon" />
+                                width={"80px"} height={"80px"} className='
+                                w-[80px] h-[80px] rounded-full object-cover
+                                ' src={ data?.image || profileIcon } alt="profile-icon" />
                                 { profileList && <ProfileList onClick={profileListClick} role={data && data.role}/> }
                             </div>
                             </div>
