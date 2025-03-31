@@ -60,7 +60,7 @@ const MobileChat = ({
                         contactId={contact}  contact={onlinePeople[contact]} 
                         key={contact}
                         // @ts-ignore
-                        logo={usersLogo}
+                        logo={usersLogo?.filter(i => i._id == contact)}
                        /> ))
                 }
                 {
@@ -69,7 +69,7 @@ const MobileChat = ({
                        contactId={contact}
                        contact={offlinePeople[contact]} key={contact}
                        // @ts-ignore
-                       logo={usersLogo}
+                       logo={usersLogo?.filter(i => i._id == contact)}
 
                        /> ))   
                 }

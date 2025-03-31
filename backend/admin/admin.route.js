@@ -238,13 +238,17 @@ router.delete('/break/task/delete', async(req, res) => {
 router.get('/fetch/notification', async(req, res) => {
   try { 
     const token = req.user;
-
+    //const objectTokenId = new mongoose.Types.ObjectId(token.id);
+    
     const commandFind = await Command.findOne({ admin:token.id });
     const usersByNotification = await User.find({ "notification.id": commandFind?._id })
-    const userFind = await Command.find({ "notification.id": token.id });
-    const commandFindUsers = await Command.find({ "users.id":token.id });
-
-    if (commandFind?.length || usersByNotification?.length) {
+    
+    const userFind = await Command.find({ "notification.id":token.id });
+    const commandFindUsers = await Command.find({ 
+      "users.id": token.id
+    });
+    
+    if (commandFind || usersByNotification?.length) {
      
       const mergedNotificatonIds = commandFind?.users.map(i=> i.id) || []
       const userId = usersByNotification?.map(obj => obj?._id.toString()) || [];
@@ -257,7 +261,7 @@ router.get('/fetch/notification', async(req, res) => {
 
       const mergedIds = userFind.map(i => i?._id);
      
-      res.status(202).json({ allIds:[ ...mergedIds, ...mergedNotificatonIds] }) 
+      res.status(200).json({ allIds:[ ...mergedIds, ...mergedNotificatonIds] }) 
       
     } else{
       res.status(212).json({ })

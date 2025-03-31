@@ -67,9 +67,20 @@ export default function AdminPage() {
     const profileListClick = (type:string) => {
         setOpenProfileList(false);
         if(type == 'delete'){
-            setEditOrDelete('delete');
+            if(editOrDelete == 'delete'){
+                setEditOrDelete('')
+                document.body.style.cursor = "default"; 
+            }else{
+                setEditOrDelete('delete');
+            }
+            
         }else if(type == 'edit'){
-            setEditOrDelete('edit');
+            if(editOrDelete == 'edit'){
+                setEditOrDelete('')
+                document.body.style.cursor = "default"; 
+            }else{
+                setEditOrDelete('edit');
+            }
         }else if(type == 'add'){
             setOpenUserSearch(true)
         }
@@ -85,7 +96,7 @@ export default function AdminPage() {
     }, [editOrDelete, mainTask, setRole]);
 
   
-
+    console.log(editOrDelete);
     return (
         <>
             {isLoading && <Spinner />}

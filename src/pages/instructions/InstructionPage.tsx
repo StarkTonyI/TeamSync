@@ -58,7 +58,7 @@ const Instructions = () => {
 const features = [
   {
     title: "Edit Content",
-    description: "Edit task - a tool that allows you to edit a task and all its data. You can use it by clicking 'Edit' in the task panel. To edit a task, click on it with a pencil. To remove it, right-click. You can edit both the main task and the subtask.",
+    description: "Edit task - a tool that allows you to edit a task and all its data. You can use it by clicking 'Edit' in the task panel. To edit a task, click on it with a pencil. To remove it, right-click. You can edit both the main task and the subtask,in the mobile version, click the 'Edit' button in the toolbar again.",
     icon: <Pencil className="h-6 w-6" />,
     image: pencillPNG,
     imageAlt: "Person editing content on a laptop",
@@ -68,7 +68,7 @@ const features = [
  },
   {
     title: "Delete Elements",
-    description: "Delete task - a tool for completely deleting a task without the possibility of recovery. Traces will remain only in the 'Analyze-page' as the number of tasks, but no more. It is located under the 'Delete' line in the task panel. You can also remove it by right-clicking.",
+    description: "Delete task - a tool for completely deleting a task without the possibility of recovery. Traces will remain only in the 'Analyze-page' as the number of tasks, but no more. It is located under the 'Delete' line in the task panel. You can also remove it by right-clicking, in the mobile version, click the 'Delete' button in the toolbar again",
     icon: <Trash className="h-6 w-6" />,
     image: trashPNG,
     imageAlt: "Code on screen showing delete functionality",
