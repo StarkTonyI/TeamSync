@@ -4,6 +4,8 @@ const User = require('../auth/auth.module.js');
 const mongoose = require('mongoose');
 const Command = require('../command/command.model.js');
 const AnalyzeTotalBase = require('../analyzeUser/analyzeUser.module.js');
+const dayjs = require('dayjs')
+
 router.get('/fetch/task/:id', async (req, res)=>{    
 try{
     const { taskType } = req.query;
@@ -36,7 +38,7 @@ router.put('/complete/breakTask/:id', async (req, res) => {
         const { id } = req.params;
         const { taskType } = req.query;
         const myId = req.user;
-        const date = new Date().toString();
+        const date = dayjs().toDate();
         const objectId = new mongoose.Types.ObjectId(id);
         if (taskType == 'breakTask') {
             const updatedBreakTask = await User.findOneAndUpdate(
@@ -132,7 +134,7 @@ router.put('/create/task/:id', async(req, res)=>{
         status:'todo',
         progress:0,
         priority:data.priority,
-        creatAt:new Date()
+        creatAt:dayjs().toDate()
     }   
     if(taskType == 'breakTask'){
          const updateTask = await User.findByIdAndUpdate(userData.id, 

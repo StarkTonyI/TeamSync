@@ -7,6 +7,8 @@ const { format } = require("date-fns");
 express().use(express.json());
 const cors = require('cors');
 const mongoose = require('mongoose');
+const dayjs = require('dayjs')
+
 
 function updateArrayStatus(arr1, arr2) {
     const map = new Map(arr2.map(item => [item._id.toString(), item.completed]));
@@ -33,7 +35,7 @@ router.post('/analyzeTask/:id',async (req, res)=>{
 
         const findUser = await userModel.findById(id);
 
-        const now = new Date();
+        const now = dayjs().toDate();
         const day = format(now, "dd");
         const month = format(now, "MMMM");
         const year = format(now, "yyyy");

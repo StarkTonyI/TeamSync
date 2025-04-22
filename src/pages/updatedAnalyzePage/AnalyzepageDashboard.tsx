@@ -11,6 +11,7 @@ import { useTotalTaskAdminMutation, useTotalTaskUserMutation } from "../../redux
 import { addMonths, format, parse } from "date-fns";
 import { CardTitle } from "../../uiCompoents/ui/card";
 import { AnalyzeTask } from "../../types/TaskType";
+import dayjs from "dayjs";
 
 interface valueAnalyzeState {
   name:string, 
@@ -69,8 +70,8 @@ const UpdatedAnalyzPage = () => {
     ).map((obj) => obj.month);
   
     const earliestMonth = uniqueMonths && 
-    uniqueMonths.length ? parse(`01 ${uniqueMonths[0]} 2025`, "dd MMMM yyyy", new Date())
-    : new Date();
+    uniqueMonths.length ? parse(`01 ${uniqueMonths[0]} 2025`, "dd MMMM yyyy", dayjs().toDate())
+    : dayjs().toDate();
    
       useEffect(() => {
         const newData = [];

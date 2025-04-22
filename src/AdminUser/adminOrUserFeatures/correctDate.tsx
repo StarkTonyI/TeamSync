@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { format, addDays, differenceInDays, parseISO } from 'date-fns';
+import dayjs from 'dayjs';
 export default function useSlidingDates() {
     const [dates, setDates] = useState<string[]>([]);
   
     useEffect(() => {
       const STORAGE_KEY = 'chart_start_date';
   
-      const today = new Date();
+      const today = dayjs().toDate()
   
       let savedStartDateStr = localStorage.getItem(STORAGE_KEY);
   

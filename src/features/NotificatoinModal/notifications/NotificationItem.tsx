@@ -5,6 +5,7 @@ import { useGetUserCommandQuery } from '../../../redux/userCommandApi/UserComman
 import { toast } from 'sonner';
 import { cn } from '../../../uiCompoents/lib/utils';
 import { Button } from '../../../uiCompoents/ui/button';
+import dayjs from 'dayjs';
 
 interface NotificationItemProps {
   notification: Notification;
@@ -18,7 +19,7 @@ export default function NotificationItem({ notification, onAccept, deleteNotific
 
 
  const formatTime = (date: Date) => {
-    const now = new Date();
+    const now = dayjs().toDate()
     const parsedDate = new Date(date);
     const diffInMs = now.getTime() - parsedDate.getTime();
     

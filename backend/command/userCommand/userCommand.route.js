@@ -4,6 +4,8 @@ const Command = require('../command.model.js')
 const User = require('../../auth/auth.module.js');
 express().use(express.json());
 const mongoose = require('mongoose');
+const dayjs = require('dayjs')
+
 
 
 
@@ -90,7 +92,7 @@ else{
 router.put('/send/invitation/:id', async(req, res)=> {
   const { id } = req.params;
   try {
-  const now = new Date();
+  const now = dayjs().toDate();
   const user = req.user;
   const command = await Command.findByIdAndUpdate( id,
     { $push: { notification: { ...user, read:false, date:now }  } }

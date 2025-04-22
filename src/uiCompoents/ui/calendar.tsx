@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { Dispatch, SetStateAction, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -91,7 +92,7 @@ interface CalendarProps {
 }
 
 const Calendar = ({ setDate }: CalendarProps) => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(dayjs().toDate());
 
   return (
     <CalendarContainer>

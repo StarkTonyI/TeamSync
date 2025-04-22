@@ -1,7 +1,10 @@
+
 // @ts-nocheck
+import dayjs from "dayjs";
+
 export default function formatDate(createdAt:string) {
     const inputDate = new Date(createdAt);
-    const today = new Date(); // Сегодняшняя дата (11 марта 2025 в вашем случае)
+    const today = dayjs().toDate() // Сегодняшняя дата (11 марта 2025 в вашем случае)
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1); // Вчера
   

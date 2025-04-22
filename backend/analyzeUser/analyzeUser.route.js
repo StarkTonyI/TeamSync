@@ -7,6 +7,10 @@ const { format } = require("date-fns");
 express().use(express.json());
 const cors = require('cors');
 const mongoose = require('mongoose');
+const dayjs = require('dayjs')
+const dayjs = require('dayjs')
+const dayjs = require('dayjs')
+
 
 express().use(cors({
   origin: process.env.FRONTEND_URL,
@@ -59,7 +63,7 @@ router.post('/analyzeTask/:id', async (req, res) => {
 
       
 
-      const now = new Date();
+      const now = dayjs().toDate();
       const day = format(now, "dd");
       const month = format(now, "MMMM");
       const year = format(now, "yyyy");

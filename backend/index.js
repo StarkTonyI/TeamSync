@@ -22,6 +22,7 @@ const { auth, checkRole, authMiddleware } = require("./authMiddlewares/authMiddl
 const PORT = process.env.PORT || 3000;
 const accessTokenSecret = process.env.JWT_SECRET;
 const refreshTokenSecret = process.env.JWT_REFRESH_SECRET
+const dayjs = require('dayjs')
 
 app.use(express.json());
 
@@ -145,7 +146,7 @@ connection.on('message', async (message) => {
     const messageData = JSON.parse(message);
     const { messageText, sender, recipient, file, _id  } = messageData;
 
-    const date = new Date();
+    const date = dayjs().toDate();
     let filename = null;
    
     if (file) {     

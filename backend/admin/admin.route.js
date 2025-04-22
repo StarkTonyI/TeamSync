@@ -8,6 +8,7 @@ const Command = require('../command/command.model.js');
 const User = require('../auth/auth.module.js');
 const mongoose = require('mongoose');
 const totalTask = require('../analyzeUser/analyzeUser.module.js');
+const dayjs = require('dayjs')
 
 express().use(cors({
   origin: process.env.FRONTEND_URL,
@@ -33,7 +34,7 @@ router.put('/invite/user/:id', async (req, res) => {
   const adminData = req.user;
   const commandFind = await Command.findOne({ admin:adminData.id });
   const commandId = commandFind._id;
-  const date = new Date();
+  const date = dayjs().toDate();
   try {
     const updatedUser = await User.findOneAndUpdate(
       { _id: id },
@@ -164,7 +165,7 @@ router.put('/create/task', async(req, res)=>{
           progress:0,
           priority:data.priority,
           userId:[],
-          creatAt:new Date()
+          creatAt:dayjs().toDate()
     }   
         const updateTask = await User.findByIdAndUpdate(
           userData.id,

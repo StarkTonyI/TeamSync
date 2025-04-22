@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "../../uiCompoents/ui/card";
-
+import dayjs from 'dayjs'
 export default function CurrentTime(){
-  const [currentTime, setCurrentTime] = useState(new Date())
+  const [currentTime, setCurrentTime] = useState(dayjs().toDate())
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString("en-US", {
       hour12: false,
@@ -23,7 +23,7 @@ export default function CurrentTime(){
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(new Date())
+      setCurrentTime(dayjs().toDate())
     }, 1000)
 
     return () => clearInterval(interval)

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-
+import dayjs from 'dayjs'
 export default function TimeLeft({ createdAt, deadline }: { deadline: string, createdAt: string }) {
     const [timeLeft, setTimeLeft] = useState<string>('');
     const [color, setColor] = useState<string>('green');
@@ -9,7 +9,7 @@ export default function TimeLeft({ createdAt, deadline }: { deadline: string, cr
         const createdDate = new Date(createdAt);
 
         const interval = setInterval(() => {
-            const now = new Date();
+            const now = dayjs().toDate()
         
             const totalTime = deadlineDate.getTime() - createdDate.getTime(); // полное время от создания до дедлайна
             const elapsedTime = now.getTime() - createdDate.getTime(); // время, которое прошло с создания задачи

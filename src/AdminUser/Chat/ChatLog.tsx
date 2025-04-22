@@ -16,6 +16,7 @@ import ChatHeader from "./ChatComponents/chatParts/chatHeader";
 import MessagesList from "./ChatComponents/chatParts/messagesList";
 import { makeDelay } from "../adminOrUserFeatures/animationFeatures";
 import MessagesInput from "./ChatComponents/chatParts/messagesInput";
+import dayjs from "dayjs";
 
 interface Message {
   id: string;
@@ -69,7 +70,7 @@ export default function AdminChat(){
       id:''
     });
 
-     const isoDate = new Date().toISOString();
+     const isoDate = dayjs().toDate()
      const { id } = useContext(UserContext) ?? {};
      const { data:adminData  } = useGetAdminDataQuery({});
      const { data: userCommand } = useGetUserCommandQuery({}) || []; 
@@ -245,7 +246,6 @@ return  (
     ease: "easeInOut", 
     delay: makeDelay('high', chatOpen.signal),
   }}
-  className={` ${ peopleExist ? '' : 'flex items-center justify-center' }`}
 >
   <Card className={`bg-slate-900/50 border-slate-700/50 backdrop-blur-sm h-full
   `}>
