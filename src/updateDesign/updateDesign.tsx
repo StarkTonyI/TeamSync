@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import ResoureAllocation from "./adminComponents/resourceAllocation/resourceAllocation";
 import { useGetProfileQuery } from "../redux/authApi/authApi";
 import { NavItem } from "../AdminUser/adminOrUserComponents/MetricCards";
+import FloatingCloseButton from "../AdminUser/adminOrUserComponents/floatingCloseButton";
 export default function Dashboard() {
   const [theme] = useState<"dark" | "light">("dark")
   const [openModal,setOpenModal] = useState(false);
@@ -35,6 +36,7 @@ export default function Dashboard() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [editOrDelete, setEditOrDelete] = useState('');
   const { showBadge } = useNotifications();
+  const [featureEnabled, setFeatureEnabled] = useState(false);
   const [openUserSearch, setOpenUserSearch] = useState(false);
   const { data:command } = useGetCommandQuery({});
   const { data } = useGetProfileQuery({});
@@ -135,10 +137,11 @@ export default function Dashboard() {
     }
   }, [])
 
-  const handleContextMenu = (event:React.MouseEvent) => {
+  const handleContextMenu = (event:React.MouseEvent | null) => {
     if (editOrDelete){
-       event.preventDefault();
+       event?.preventDefault();
        setEditOrDelete('');
+       setFeatureEnabled(false);
        document.body.style.cursor = "default"; 
        }
    };
@@ -154,7 +157,7 @@ export default function Dashboard() {
                }
               // setOpenProfileList(false);
            }  
-           window.scrollTo(0, document.documentElement.scrollHeight || document.body.scrollHeight);
+          //window.scrollTo(0, document.documentElement.scrollHeight || document.body.scrollHeight);
 
 
        }, [editOrDelete, mainTask, setRole]);
@@ -185,7 +188,15 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-
+      <FloatingCloseButton
+      onClick={()=>setEditOrDelete('')}
+      show={featureEnabled}
+      onClose={() => {
+        setFeatureEnabled(false)
+        handleContextMenu(null)
+      }
+        }
+/>
       { 
         editOrDelete == 'edit' && 
         <CustomCursor tools='pencil'/>  
@@ -317,8 +328,15 @@ export default function Dashboard() {
                 <CardContent>
                   <div className="grid grid-cols-2 gap-3">
                     <ActionButton onClick={()=>setOpenModal(true)} icon={Table}  label="Create Task" />
-                    <ActionButton onClick={()=>setEditOrDelete('edit')} icon={Edit} label="Edit Task" />
-                    <ActionButton onClick={()=>setEditOrDelete('delete')}  icon={Trash} label="Delete Task" />
+                    <ActionButton onClick={()=>{ 
+                      setEditOrDelete('edit')
+                      setFeatureEnabled(true)  
+                    }
+                    } icon={Edit} label="Edit Task" />
+                    <ActionButton onClick={()=>{
+                      setFeatureEnabled(true)
+                      setEditOrDelete('delete')}
+                      }  icon={Trash} label="Delete Task" />
                     <ActionButton onClick={()=>{
                       if(!command){
                         createCommandModal()

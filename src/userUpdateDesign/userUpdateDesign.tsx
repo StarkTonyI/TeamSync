@@ -29,6 +29,7 @@ import CommandModalSearch from "../pages/commandModal/FindCommandModal";
 import { NavItem } from "../AdminUser/adminOrUserComponents/MetricCards";
 import { useNavigate } from "react-router-dom";
 import { useGetProfileQuery } from "../redux/authApi/authApi";
+import FloatingCloseButton from "../AdminUser/adminOrUserComponents/floatingCloseButton";
 
 export default function UserMainPage() {
   const [theme] = useState<"dark" | "light">("dark")
@@ -42,6 +43,7 @@ export default function UserMainPage() {
   const [openCommandSearch, setOpenCommandSearch] = useState(false);
   const navigate = useNavigate();
   const { data } = useGetProfileQuery({});
+  const [featureEnabled, setFeatureEnabled] = useState(false);
   const { data:commandList } = useCommandListQuery({})
 
   useEffect(() => {
@@ -148,10 +150,11 @@ export default function UserMainPage() {
     }
   }, [id]);
 
-  const handleContextMenu = (event:React.MouseEvent) => {
+  const handleContextMenu = (event:React.MouseEvent | null) => {
     if (editOrDelete){
-       event.preventDefault();
+       event?.preventDefault();
        setEditOrDelete('');
+       setFeatureEnabled(false);
        document.body.style.cursor = "default"; 
        }
    };
@@ -164,7 +167,7 @@ export default function UserMainPage() {
                }
               // setOpenProfileList(false);
            }  
-           window.scrollTo(0, document.documentElement.scrollHeight || document.body.scrollHeight);
+    //       window.scrollTo(0, document.documentElement.scrollHeight || document.body.scrollHeight);
 
 
        }, [editOrDelete, mainTask, setRole]);
@@ -208,7 +211,16 @@ export default function UserMainPage() {
           !editOrDelete && 
             <BreakTaskModal />
           }
-                       
+     <FloatingCloseButton
+      onClick={()=>setEditOrDelete('')}
+      show={featureEnabled}
+      onClose={() => {
+        setFeatureEnabled(false)
+        handleContextMenu(null)
+      }
+        }
+/>
+
         <TaskModal onClose={setSignalOpenAssignTask} isOpen={signalOpenAssignTask?.signal}/>   
         <NotificationModal/>  
         <CommandModalSearch 
@@ -331,8 +343,15 @@ export default function UserMainPage() {
                 <CardContent>
                   <div className="grid grid-cols-2 gap-3">
                     <ActionButton onClick={()=>setOpenModal(true)} icon={Table}  label="Create Task" />
-                    <ActionButton onClick={()=>setEditOrDelete('edit')} icon={Edit} label="Edit Task" />
-                    <ActionButton onClick={()=>setEditOrDelete('delete')}  icon={Trash} label="Delete Task" />
+                       <ActionButton onClick={()=>{ 
+                                        setEditOrDelete('edit')
+                                        setFeatureEnabled(true)  
+                                      }
+                                      } icon={Edit} label="Edit Task" />
+                      <ActionButton onClick={()=>{
+                                          setFeatureEnabled(true)
+                                          setEditOrDelete('delete')}
+                                          }  icon={Trash} label="Delete Task" />
                     <ActionButton onClick={()=>setOpenCommandSearch(true)}  icon={Users} label="Join command" />
                   </div>
                 </CardContent>

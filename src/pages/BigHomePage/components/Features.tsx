@@ -172,9 +172,13 @@ const Features = () => {
           whileInView={{ scale: 1, opacity: 1 }}
           viewport={{ once: true }}
           transition={{ type: "spring", delay: i * 0.2 + 0.5 }}
-          className={`absolute ${badge.position} flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-800/50 border border-slate-700/50 backdrop-blur-md shadow-lg hover:-translate-y-1 transition-transform`}
+          className={`absolute ${badge.position} 
+          md:flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-800/50 border
+           border-slate-700/50 backdrop-blur-md shadow-lg hover:-translate-y-1 transition-transform
+          hidden md:visible
+           `}
         >
-          <div className="h-2.5 w-2.5 rounded-full bg-blue-400 animate-pulse" />
+          <div className="h-2.5  w-2.5 rounded-full bg-blue-400 animate-pulse" />
           <span className="text-sm font-medium text-slate-300">{badge.label}</span>
         </motion.div>
       ))}
