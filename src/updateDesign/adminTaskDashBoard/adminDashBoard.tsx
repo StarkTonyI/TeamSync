@@ -17,7 +17,8 @@ export default function AdminTaskDashBoard({ editOrDelete }:TaskModalProps){
               <AdminTaskCard/>        
       <div className="mt-8">
           <Tabs defaultValue="Schedule" className="w-full">
-        <div className="flex items-center justify-between mb-4">
+ 
+        <div className="flex items-center flex-col gap-3 md:flex-row justify-between mb-4">
          
           <TabsList className="bg-slate-800/50 p-1">
             <TabsTrigger

@@ -27,7 +27,7 @@ return (
         rounded-full px-4 py-3 
         shadow-2xl hover:shadow-lg 
         transition-all duration-300
-        group"
+        group -ml-6"
     >
       <X className="w-6 h-6 group-hover:rotate-180 transition-transform duration-300" />
     </motion.button>

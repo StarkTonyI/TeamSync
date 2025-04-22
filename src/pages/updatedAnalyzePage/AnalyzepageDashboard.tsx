@@ -159,6 +159,8 @@ const UpdatedAnalyzPage = () => {
   const totalCompletedLength = commandOrUserTask?.filter(i => i.completed).length;
   const totalNotCompleted = commandOrUserTask?.filter(i => !i.completed).length;
   
+  console.log(allData)
+
   return (
 <DashboardLayout>
 <div className="grid grid-cols-1 gap-6 animate-fade-in">
@@ -191,10 +193,10 @@ const UpdatedAnalyzPage = () => {
           <div className="lg:col-span-2">
        
             <LineChartComponent
-              title="Monthly Revenue"
+              title="Total task"
               //@ts-ignore
               data={allData}
-              dataKey="revenue"
+              dataKey="value"
               color="#8B5CF6"
               height={300}
             />
@@ -213,7 +215,7 @@ const UpdatedAnalyzPage = () => {
           <div className="lg:col-span-2">
          
             <BarChartComponent
-              title="Traffic Sources"
+              title="All task states"
               data={fullParametrList}
               bars={[
                 { dataKey: "total", color: "#1050e8", name: "Total" },

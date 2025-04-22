@@ -310,40 +310,58 @@ useEffect(()=>{
 }
 
 // Process row component
-export function ProcessRow({
-  pid,
-  name,
-  user,
-  memory,
-  completedUsers,
-  status,
-}: {
+export const ProcessRow = ({ pid, name, user, completedUsers, memory, status }:{
   pid: string
   name: string
   user: string
   completedUsers: number
   memory: React.ReactNode
   status: boolean
-}) {
-  return (
-    <div className="grid grid-cols-12 py-2 px-3 ml-1 text-sm hover:bg-slate-800/50">
-      <div className="col-span-1 text-slate-500">{pid}</div>
-      <div className="col-span-3 text-slate-300">{TruncateText(name, 15)}</div>
-      <div className="col-span-2 text-slate-400 ml-4">{user}</div>
-      <div className="col-span-2 text-slate-400 ml-4">{completedUsers}%</div>
-      <div className="col-span-2 text-purple-400">{memory}</div>
-      <div className="col-span-1">
-        <Badge variant="outline" className={`
-        text-xs ml-3
-        ${status ? 'bg-green-500/10 text-green-400 border-green-500/30 ' : 
-          'bg-red-500/10 text-red-400 border-red-500/30'
-        } `}>
-          {status ? 'Yes' : 'Not'}
-        </Badge>
-      </div>
+}) => (
+  <div className="grid grid-cols-12 items-center py-2 px-3 text-sm hover:bg-slate-800/50 min-w-[500px] sm:min-w-0">
+    {/* Индекс */}
+    <div className="col-span-2 sm:col-span-1 text-xs sm:text-sm text-slate-500">
+      {pid}
     </div>
-  )
-}
+
+    {/* Название */}
+    <div className="col-span-6 sm:col-span-3 text-xs sm:text-sm text-slate-300 break-words pr-2">
+      {name}
+    </div>
+
+    {/* Участники (только на десктопе) */}
+    <div className="hidden sm:block col-span-2 text-slate-400">
+      {user}
+    </div>
+
+    {/* Прогресс (только на десктопе) */}
+    <div className="hidden sm:block col-span-2 text-slate-400">
+      {completedUsers}%
+    </div>
+
+    {/* Время (только на десктопе) */}
+    <div className="hidden sm:block col-span-2 text-purple-400 text-xs sm:text-sm">
+      {memory}
+    </div>
+
+    {/* Статус */}
+    <div className="col-span-4 sm:col-span-1 ml-3">
+      <Badge 
+        variant="outline"
+        className={`
+          text-xs 
+          ${status 
+            ? 'bg-green-500/10 text-green-400 border-green-500/30' 
+            : 'bg-red-500/10 text-red-400 border-red-500/30'
+          }`}
+      >
+        {status ? 'Yes' : 'No'}
+      </Badge>
+    </div>
+  </div>
+);
+
+
 
 // Storage item component
 export function StorageItem({
@@ -360,8 +378,9 @@ export function StorageItem({
   
 
   return (
-    <div onClick={onClick} className="bg-slate-800/50 rounded-md p-3 hover:bg-slate-800 border border-slate-700/50">
-      <div className="flex items-center justify-between mb-2">
+    <div onClick={onClick} className="bg-slate-800/50 rounded-md p-3 hover:bg-slate-800 border
+     border-slate-700/50 ">
+      <div className="flex items-center justify-between">
         <div className="text-sm text-slate-300">{TruncateText(name, 25)}</div>
         <Badge variant="outline" className="bg-slate-700/50 text-slate-300 border-slate-600/50 text-xs">
           {type}

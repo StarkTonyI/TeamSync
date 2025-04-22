@@ -54,9 +54,14 @@ export default function TaskListCard({ editOrDelete }:TaskModalProps){
 
 
   return (
-    <div className="bg-slate-800/30 rounded-lg border border-slate-700/50 p-4">
-      <div className="max-h-[390px] overflow-y-auto pr-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-        {mainTaskArray && mainTaskArray.map((task: Task, index: number) => (
+    <div className={`bg-slate-800/30 rounded-lg border
+      ${mainTaskArray.length > 0 ? '' : 'flex justify-center items-center'}
+        
+     border-slate-700/50 p-4 min-h-[150px]`}>
+      <div className={`max-h-[390px] overflow-y-auto pr-2 
+        ${mainTaskArray.length > 0 ? 'grid' : ''}
+        grid-cols-1 md:grid-cols-2 gap-4`}>
+        {mainTaskArray.length > 0 ? mainTaskArray.map((task: Task, index: number) => (
           <StorageItem
             onClick={() => passTaskData(task)}
             key={index}
@@ -64,7 +69,9 @@ export default function TaskListCard({ editOrDelete }:TaskModalProps){
             percentage={usersCompletedCount(task.userId)}
             type="TS"
           />
-        ))}
+        ))
+        : <p className="text-gray-600">Tasks not created</p>
+      }
   
         {(taskData && !editOrDelete) && (
           <TaskDetailsModal

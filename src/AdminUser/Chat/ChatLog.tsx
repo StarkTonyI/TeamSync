@@ -233,7 +233,10 @@ const scrollToBottom = () => {
       controls.start({ x: 0, opacity: 1 });
   }
 }, [chatOpen]);
+const peopleExist = Object.keys(mergedPeople).length === 0
 
+//mergedPeople
+console.log(mergedPeople);
 return  (
 <motion.div
   animate={{ height: chatOpen.signal ? 570 : 300 }}
@@ -242,9 +245,11 @@ return  (
     ease: "easeInOut", 
     delay: makeDelay('high', chatOpen.signal),
   }}
+  className={` ${ peopleExist ? '' : 'flex items-center justify-center' }`}
 >
-  <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm h-full">
-    {/* Header Section */}
+  <Card className={`bg-slate-900/50 border-slate-700/50 backdrop-blur-sm h-full
+  `}>
+   
     <motion.div
       initial={false}
       animate={{
@@ -301,7 +306,6 @@ return  (
       )}
        <div ref={bottomRef}></div>
     </AnimatePresence>
-
     {/* Contact List Section */}
     <CardContent>
       <ContactList
