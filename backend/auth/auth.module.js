@@ -67,8 +67,12 @@ const userSchema =  new mongoose.Schema({
               type:String,
               required:false
             }
-    }]
-        },
+          }],
+          creatAt:{
+          type:Date,
+          required:true
+    }
+  },
   ],  
     breakTask:[{
         mainTaskId:{

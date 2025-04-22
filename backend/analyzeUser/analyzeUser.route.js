@@ -15,6 +15,8 @@ express().use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+const isSameDay = (d1, d2) =>
+  new Date(d1).toISOString().slice(0, 10) === new Date(d2).toISOString().slice(0, 10);
 
 
 function updateCommandCompleted(commandFilter, targetId) {
@@ -55,6 +57,7 @@ router.post('/analyzeTask/:id', async (req, res) => {
       const command = await userModel.findOne({ "mainTask.userId.id": id }) || {};
       const commandFilter = command.mainTask ? command.mainTask.filter(i => i.userId.some(i => i.id == id)) : [];
 
+      
 
       const now = new Date();
       const day = format(now, "dd");
@@ -76,16 +79,16 @@ router.post('/analyzeTask/:id', async (req, res) => {
       const allTask = findUser.mainTask?.filter(task => !existingTaskIds.has(task._id.toString())) || [];
       const allTaskCommand = commandFilter?.filter(task => !existingTaskIds.has(task._id.toString())) || [];
 
-      const CommandUdatedCompleted = updateCommandCompleted(commandFilter,id)
-
+      const CommandUdatedCompleted = updateCommandCompleted(commandFilter, id)
+      
   
       
       const optimizedTask = allTask.map(({ _id, completed, deadline }) => 
-          ({ _id, completed, deadline, day, month, year, status: 'user' })
+          ({ _id, completed, deadline, day, month, year, status: 'user', creatAt:now, deleted:false })
       );
 
       const optimizedTaskCommand = allTaskCommand.map(({ _id, completed, deadline }) => 
-          ({ _id, completed, deadline, day, month, year, status: 'command' })
+          ({ _id, completed, deadline, day, month, year, status: 'command', creatAt:now, deleted:false })
       );
 
       
@@ -94,6 +97,17 @@ router.post('/analyzeTask/:id', async (req, res) => {
       if (optimizedTaskCommand.length) totalTask.allTask.push(...optimizedTaskCommand);
       
       
+      totalTask.allTask.forEach(task => {
+        if(task.status === 'command'){
+        const isToday = isSameDay(task.creatAt, now);
+  
+        const idMissing = !commandFilter?.some(i => i._id.toString() === task._id.toString());
+        if (isToday && idMissing) {
+          task.deleted = true; // меняешь прямо в оригинале
+        }
+      }
+    });
+
       const map = new Map(CommandUdatedCompleted.map(item => [item._id.toHexString(), item]));
           totalTask.allTask.forEach(i => {
         if (map.has(i._id.toHexString()) && map.get(i._id.toHexString()).completed !== i.completed) {
@@ -101,7 +115,7 @@ router.post('/analyzeTask/:id', async (req, res) => {
         } 
       })
 
-      await totalTask.save();
+     await totalTask.save();
 
       res.status(200).json(totalTask);
   } 

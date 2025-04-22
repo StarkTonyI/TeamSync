@@ -47,7 +47,7 @@ router.get('/command/fetch/user/:id', async(req, res)=>{
   try {
     const { id } = req.params;
     const objectId = new mongoose.Types.ObjectId(id);
-    const findUser = await User.findById(objectId);
+    const findUser = await User.findById(objectId).select('-password');
     res.status(200).json(findUser);
   }catch(err){
     res.status(400).json('Not okay' + err);

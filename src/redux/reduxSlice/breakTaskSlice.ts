@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Task, ToolsOption } from '../../taskDashboard/types/task';
+import { Task, ToolsOption } from '../../types/task';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import userApi from '../userApi/userApi';
-
+import totalTaskApi from '../totalTaskApi/totalTask'
 
 interface BreakTaskState {
+    id:string;
     breakTask:Task[]; 
     editBreakTask: Task | null;
     mainTask:Task[],
@@ -15,7 +16,8 @@ const initialState: BreakTaskState  = {
   breakTask: [],
   editBreakTask: null,
   mainTask:[],
-  editMainTask:null
+  editMainTask:null,
+  id:''
 };
 
 function updateArray(arr1:Task[], arr2:Task[]) {
@@ -29,6 +31,20 @@ function editArray(baseArray:Task[], updateArray:Task[]) {
   return baseArray.map(item => updateMap.has(item._id) ? { ...item, ...updateMap.get(item._id) } : item);
 }
 
+const UpdateMainTaskArray = (mainTaskArray:Task[], id:string) =>{
+ 
+  return mainTaskArray.map(task => {
+    const totalTaskUser = task.userId.filter(i => i.id == id);
+    const completedTask = totalTaskUser.filter(i => i.completed == 'true').length;
+    
+    if (completedTask > 0) {
+      return { ...task, completed: true }; // Создаём обновлённый объект
+    }
+    return task; // Возвращаем неизменённый, если условие не выполнено
+
+    });
+}
+
 export const fetchBreakTask = createAsyncThunk<Task[], { taskType:string, id:string }>(
   '/fetch/breakTask', 
     async ({ taskType, id }, { rejectWithValue, dispatch }) => {
@@ -36,6 +52,7 @@ export const fetchBreakTask = createAsyncThunk<Task[], { taskType:string, id:str
         const task = await dispatch(
         userApi.endpoints.fetchBreakTask.initiate({taskType, id})  
      ).unwrap();
+    
      return task;
     } catch (err: any) {
       return rejectWithValue(err.message);
@@ -43,13 +60,15 @@ export const fetchBreakTask = createAsyncThunk<Task[], { taskType:string, id:str
   }
 );
 
-export const createBreakTask = createAsyncThunk<Task[], { breakTask: Task, mainTaskId: string | undefined, taskType:string}>(
-  '/create/breakTask', async ({ breakTask, mainTaskId, taskType }, { rejectWithValue, dispatch }) => {
+export const createBreakTask = createAsyncThunk<Task[], { breakTask: Task, mainTaskId: string | undefined, taskType:string, id:string}>(
+  '/create/breakTask', async ({ breakTask, mainTaskId, taskType, id }, { rejectWithValue, dispatch }) => {
     try {
       const data = await dispatch(
         userApi.endpoints.breakUpTheTask.initiate({ breakTask, mainTaskId, taskType })
       ).unwrap();
-  
+      await dispatch(totalTaskApi.endpoints.totalTaskUser.initiate(id))
+
+
       return data[taskType];
 
     } catch (err: any) {
@@ -64,6 +83,7 @@ export const makeCompleteBreakTask = createAsyncThunk<Task[], { breakTaskId: str
         const data = await dispatch(
         userApi.endpoints.breakTaskComplete.initiate({ breakTaskId, taskType })
       ).unwrap();
+      
       return data[taskType];
     } catch (err: any) {
       return rejectWithValue(err.message);
@@ -108,6 +128,7 @@ const breakTaskSlice = createSlice({
   
         isEditTask(state, action: PayloadAction<Task | null>) {
           if(action.payload){
+            console.log(action.payload)
             if(action.payload.priority){
               state.editMainTask = { ...action.payload, mainTaskId:'suavassav' }
             }else{
@@ -116,8 +137,12 @@ const breakTaskSlice = createSlice({
       }else{
         state.editBreakTask = null;
       }
-
     },
+        addIdMethod(state, action:PayloadAction<string | null>){
+          if(action.payload){
+            state.id = action.payload;
+          }
+        }
   },
     extraReducers: (builder) => {
       
@@ -125,13 +150,11 @@ const breakTaskSlice = createSlice({
             .addCase(fetchBreakTask.fulfilled, (state, action: PayloadAction<Task[]>) => {
               if(state.breakTask.length == 0 || state.mainTask.length == 0){
                   const currentMainTask = JSON.parse(JSON.stringify(state.mainTask));
-
                   if(action.payload[0]?.mainTaskId){
                       state.breakTask = action.payload;
-
-                    }else{
+                    } else{
                       if(!currentMainTask.length)
-                      state.mainTask = action.payload
+                      state.mainTask = UpdateMainTaskArray(action.payload, state.id)
                      }
                 }
             })
@@ -141,12 +164,16 @@ const breakTaskSlice = createSlice({
             })
 
             .addCase(createBreakTask.fulfilled, (state, action: PayloadAction<Task[]>) => {
+              console.log(action.payload)
               if(action.payload[0].mainTaskId){
+                console.log('break')
                 state.breakTask = action.payload;
                 } else {
+                  console.log('no brea')
                 const currentMainTask = JSON.parse(JSON.stringify(state.mainTask));
                 const correctArray = updateArray(currentMainTask, action.payload); 
-                state.mainTask = correctArray
+
+                state.mainTask = UpdateMainTaskArray(correctArray, state.id)
                  }
             })
 
@@ -155,11 +182,10 @@ const breakTaskSlice = createSlice({
             })
 
             .addCase(makeCompleteBreakTask.fulfilled, (state, action: PayloadAction<Task[]>) => {
-              
                 const currentMainTask = JSON.parse(JSON.stringify(state.mainTask));
               if(action.payload[0].priority) {
                 const correctChange = editArray(currentMainTask, action.payload);
-                state.mainTask = correctChange
+                state.mainTask = UpdateMainTaskArray(correctChange, state.id)
               } else {
                 state.breakTask = action.payload
               }
@@ -174,7 +200,7 @@ const breakTaskSlice = createSlice({
               if(action.payload[0].priority){
                 const currentMainTask = JSON.parse(JSON.stringify(state.mainTask));
                 const correctEditMainTask = editArray(currentMainTask, action.payload);
-                state.mainTask = correctEditMainTask
+                state.mainTask = UpdateMainTaskArray(correctEditMainTask, state.id)
               }else{
                 state.breakTask = action.payload
               }
@@ -189,7 +215,7 @@ const breakTaskSlice = createSlice({
                 if(action.payload.taskType == 'mainTask'){
                   const currentMainTask = JSON.parse(JSON.stringify(state.mainTask));
                   const deleteMainTaskFilter = currentMainTask.filter((i: Task) => i._id !== action.payload.id);
-                  state.mainTask = deleteMainTaskFilter;
+                  state.mainTask = UpdateMainTaskArray(deleteMainTaskFilter, state.id);
                 }else{
                     const currentBreakTask = JSON.parse(JSON.stringify(state.breakTask));
                     const deleteMainTaskFilter = currentBreakTask.filter((i:Task) => i._id !== action.payload.id);
@@ -212,6 +238,6 @@ export const editBreakTaskState = (state: {breakTask:BreakTaskState}) => state.b
 export const mainTaskState = (state: {breakTask:BreakTaskState}) => state.breakTask.mainTask;
 export const editMainTaskState = (state: {breakTask:BreakTaskState}) => state.breakTask.editMainTask;
 
-export const { isEditTask } = breakTaskSlice.actions;
+export const { isEditTask, addIdMethod } = breakTaskSlice.actions;
 
 export default breakTaskSlice.reducer;

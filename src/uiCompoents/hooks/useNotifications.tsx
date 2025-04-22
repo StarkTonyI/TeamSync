@@ -59,7 +59,6 @@ export function useNotifications() {
 }, [commandNotificationBox]);
 
   const deleteNotificatoin = async(id:string) => {
-  
     setNotifications(prevNotifications =>
       prevNotifications.filter(notification => !(notification.id === id || notification._id === id))
     );

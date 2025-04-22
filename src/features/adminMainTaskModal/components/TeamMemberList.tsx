@@ -1,18 +1,7 @@
 import React from 'react';
 import userPng from '../../../images/user.png'
-import { userId } from '../../../taskDashboard/types/task';
-interface Task {
-  name: string;
-  status: 'completed' | 'in-progress' | 'pending';
-}
-
-interface TeamMember {
-  _id:string
-  username: string;
-  avatar: string;
-  task: Task;
-  imageUrl:string
-}
+import { userId } from '../../../types/task';
+import { TeamMember } from '../../../types/TaskType';
 
 interface TeamMemberListProps {
   members: TeamMember[];

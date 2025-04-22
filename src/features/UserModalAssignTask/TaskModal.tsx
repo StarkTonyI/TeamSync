@@ -12,12 +12,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { assignMainTask, mainTaskStateAdmin } from "../../redux/reduxSlice/mainTaskSlice";
 import { AppDispatch } from "../../redux/store";
 import DescriptionModal from "../descriptionModal/descriptionModal";
-import { Task } from "../../taskDashboard/types/task";
+import { Task } from "../../types/task";
+import { setSignalOpenAssignTaskType } from "../../types/TaskType";
 
 
 interface TaskModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen: boolean | undefined;
+  onClose:React.Dispatch<React.SetStateAction<setSignalOpenAssignTaskType>> | undefined;
 }
 const TaskModal = ({ isOpen, onClose }: TaskModalProps) => {
   const mainTaskState = useSelector(mainTaskStateAdmin);
@@ -26,6 +27,7 @@ const TaskModal = ({ isOpen, onClose }: TaskModalProps) => {
   const [getUser] = useGetUserMutation();
   const { signalOpenAssignTask } = useContext(UserContext) || {};
   const dispath:AppDispatch = useDispatch()
+
 
   
   const [tasks, setTasks] = useState<Task[]>(mainTaskState);
@@ -37,7 +39,8 @@ const TaskModal = ({ isOpen, onClose }: TaskModalProps) => {
       setUser(data)
     }
     userFunction();
-  }, []);
+  }, [signalOpenAssignTask]);
+
 
   const toggleTask = async(description:string) => {
     const userId = user?._id;
@@ -73,90 +76,97 @@ function CorrectOpenDescriptionModal(){
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[rgb(6,7,28)]"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50"
           onClick={()=>onClose({
             signal:false,
             id:''
 })}>
 
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="glass-morphism w-full max-w-2xl 
-            rounded-xl overflow-hidden swap-user-modal min-h-[400px]"
-            onClick={e => e.stopPropagation()}>
+<motion.div
+  initial={{ scale: 0.95, opacity: 0 }}
+  animate={{ scale: 1, opacity: 1 }}
+  exit={{ scale: 0.95, opacity: 0 }}
+  transition={{ duration: 0.2 }}
+  className="bg-gradient-to-br from-[#0f172a] to-[#1e293b] w-full max-w-3xl rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+  onClick={(e) => e.stopPropagation()}
+>
+  <div className="p-6 border-b border-white/10 bg-white/5 backdrop-blur-md">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        <img
+          src={user && (user.imageUrl ? user.imageUrl : userIcon)}
+          alt="User avatar"
+          className="w-14 h-14 rounded-full object-cover ring-2 ring-blue-400/30"
+        />
+        <div>
+          <h3 className="text-lg font-semibold text-white">{user?.username}</h3>
+          <p className="text-sm text-white/50">User</p>
+        </div>
+      </div>
+      <button
+        onClick={onClose}
+        className="p-2 rounded-full hover:bg-white/10 transition-colors"
+      >
+        <X className="w-5 h-5 text-white/60" />
+      </button>
+    </div>
+  </div>
 
-            <div className="p-6 border-b border-white/10">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <img
-                    src={user && (user.imageUrl ? user.imageUrl : userIcon)}
-                    alt="User avatar"
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-white/20"
-                  />
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">{user?.username} </h3>
-                    <p className="text-sm text-white/60">User</p>
-                  </div>
-                </div>
-                <button
-                  onClick={onClose}
-                  className="p-1 rounded-full hover:bg-white/10 transition-colors"
-                >
-                  <X className="w-5 h-5 text-white/60" />
-                </button>
-              </div>
-            </div>
+  <div className="max-h-[450px] overflow-y-auto p-6 space-y-4">
+    {tasks.map((task) => (
+      <motion.div
+        key={task._id}
+        layout
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/5"
+      >
+        <img
+          src={taskIcon}
+          alt={task.title}
+          className="w-12 h-12 rounded-md object-cover"
+        />
 
-            <div className="max-h-[450px] overflow-y-auto p-6 space-y-4">
-     
-            {tasks.map((task) => (
-              
-              <motion.div
-                  key={task._id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex items-center space-x-4 p-4 rounded-lg hover:bg-white/5 transition-colors">
-                  <img
-                    src={taskIcon}
-                    alt={task.title}
-                    className="w-12 h-12 rounded-lg object-cover"/>
-                 
-                  <div className="flex-1 min-w-0">
-                    <h4 className={cn(
-                      "text-base font-medium",
-                      task?.userId.some(i => i.id == user?._id)  ? "text-white/40" : "text-white"
-                    )}>
-                      {task.title}
-                    </h4>
-                    <p className={cn(
-                      "text-sm truncate",
-                      task?.userId.some(i => i.id == user?._id)  ? "text-white/30" : "text-white/60"
-                    )}>
-                      {task.description}
-                    </p>
-                  </div>
-                  <button
-                    onClick={()=> setRegulateSustem(task)}
-                    className={cn(
-                      "p-2 rounded-full transition-colors",
-                     task?.userId.some(i => i.id == user?._id)  ? "text-green-400" : "text-white/40 hover:text-white"
-                    )}
-                  >
-                    <CheckCircle2 className="w-6 h-6" />
-                  </button>
-               
-              </motion.div>
-             
-             ))}
-     
-            </div>
+        <div className="flex-1 min-w-0">
+          <h4
+            className={cn(
+              "text-base font-medium truncate",
+              task?.userId.some((i) => i.id == user?._id)
+                ? "text-white/40"
+                : "text-white"
+            )}
+          >
+            {task.title}
+          </h4>
+          <p
+            className={cn(
+              "text-sm truncate",
+              task?.userId.some((i) => i.id == user?._id)
+                ? "text-white/30"
+                : "text-white/60"
+            )}
+          >
+            {task.description}
+          </p>
+        </div>
+        <button
+          onClick={() => setRegulateSustem(task)}
+          className={cn(
+            "p-2 rounded-full transition-colors",
+            task?.userId.some((i) => i.id == user?._id)
+              ? "text-green-400"
+              : "text-white/40 hover:text-white"
+          )}
+        >
+          <CheckCircle2 className="w-6 h-6" />
+        </button>
+      </motion.div>
+    ))}
+  </div>
+</motion.div>
 
-          </motion.div>
+
           { 
           CorrectOpenDescriptionModal()
           } 

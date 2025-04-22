@@ -9,7 +9,7 @@ import { TaskType } from '../../../types/TaskType';
 import { isEditMainTask } from '../../../redux/reduxSlice/mainTaskSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../../redux/store';
-import { userId } from '../../../taskDashboard/types/task';
+import { userId } from '../../../types/task';
 
 interface TaskModalProps {
   editOrDelete:string
@@ -30,24 +30,24 @@ const openModal = () => {
   if(!editOrDelete) setIsOpen(true);
 }
 
+
 const passTaskData = (data:TaskType) => {
   openModal();
   setTaskData(data);
- 
   getUserTask(data._id);
-
   if(editOrDelete){    
+    //@ts-ignore
     if(setMainTask && data) setMainTask(data); 
     setIsOpen(false)
-    if(editOrDelete == 'edit') dispatch(isEditMainTask(data));
-
+    //@ts-ignore
+    if(editOrDelete == 'edit') dispatch(isEditMainTask(data))
 }
 
 }
+
 const getUserTask = async(taskId:string) => {
   const { data } = await fetchUserMainTask(taskId);
   setUsersList(data); 
- 
 }
 const updateFunction = (task:userId[] | undefined) => {
   const totalUserLength = task?.length || 0;
@@ -63,7 +63,7 @@ function CloseModal(){
   setIsOpen(false);
   setTaskData(undefined);
   setUsersList(undefined);
-}
+};
 
 const toggleExpand = (key: keyof typeof expanded) => {
   setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));

@@ -9,7 +9,7 @@ interface User {
   id: string,
   username: string,
   role: string
-
+  _id:string;
 
 
 }
@@ -23,13 +23,14 @@ interface DeleteUserModalProps {
 
 const DeleteUserModal = ({ user, isOpen, onClose, onDelete }: DeleteUserModalProps) => {
 
+
   const handleDelete = () => {
     if (!user) return;
     setTimeout(() => {
-      onDelete(user.id);
+      onDelete(user._id);
       onClose();
     
-  })
+  }, 200)
   };
 
   if (!user) return null;

@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { createBreakTask, editBreakTaskFunction, editBreakTaskState } from "../../redux/reduxSlice/breakTaskSlice.ts";
 import { useForm } from "react-hook-form";
 import { AppDispatch } from "../../redux/store.ts";
-import { Task } from "../../taskDashboard/types/task.ts";
+import { Task } from "../../types/task.ts";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../../userContext/userContext.tsx";
 
@@ -12,7 +12,7 @@ export default function BreakTaskForm(){
   const { mainTask } = useContext(UserContext) || {};
   const breakTaskState = useSelector(editBreakTaskState);
   const { register, handleSubmit, reset } = useForm<Task>();
-  
+  const { id } = useContext(UserContext) || {}; 
     useEffect(() => {
       if (breakTaskState) {
         reset({
@@ -27,7 +27,7 @@ export default function BreakTaskForm(){
     try {
       if(!breakTaskState){
         dispatch(createBreakTask(
-          {breakTask:breakTaskSubmit, mainTaskId:mainTask?._id, taskType:'breakTask'}
+          {breakTask:breakTaskSubmit, mainTaskId:mainTask?._id, taskType:'breakTask', id: id || ''}
         ));
       }else{
         dispatch(editBreakTaskFunction({breakTask:breakTaskSubmit, taskId:breakTaskState._id, taskType:'breakTask'}));

@@ -1,21 +1,15 @@
+//@ts-nocheck
 import { useContext, useEffect, useState } from "react";
 import { Button } from "../../uiCompoents/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,DialogTitle, DialogTrigger,} from "../../uiCompoents/ui/dialog";
+  DialogFooter,
+  DialogHeader,DialogTitle,} from "../../uiCompoents/ui/dialog";
 import { Input } from "../../uiCompoents/ui/input";
 import { Label } from "../../uiCompoents/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../uiCompoents/ui/select";
 import { Textarea } from "../../uiCompoents/ui/textarea";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import CreateTaskButton from "../../features/createTaskButton/createTaskButton";
 import { useForm } from "react-hook-form";
 import { UserContext } from "../../userContext/userContext";
 import { AppDispatch } from "../../redux/store";
@@ -26,21 +20,38 @@ import { editMainTaskState } from "../../redux/reduxSlice/breakTaskSlice";
 import { editMainTaskStateAdmin } from "../../redux/reduxSlice/mainTaskSlice";
 import { useSelector } from "react-redux";
 import { createMainTask, editMainTaskFunction } from "../../redux/reduxSlice/mainTaskSlice";
+import { Popover, PopoverContent, PopoverTrigger } from "../../uiCompoents/ui/popover";
+import { cn } from "../../uiCompoents/lib/utils";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+
+import "react-datepicker/dist/react-datepicker.css";
+
+
+import PrioritySelect from "../pages/PrioritySelect";
+import Calendar from "../../uiCompoents/ui/calendar";
+import { useTotalTaskAdminMutation, useTotalTaskUserMutation } from "../../redux/totalTaskApi/totalTask";
+
 interface CreateTaskButtonProps {
   userType: string;
-
+  openModal:boolean;
+  setOpenModal: (value: boolean) => void;
 }
 
-
-export const CreateTaskContent = ({ userType }: CreateTaskButtonProps) => {
-  const [open,setOpen] = useState(false);
+export const CreateTaskContent = ({ userType, openModal, setOpenModal }: CreateTaskButtonProps) => {
+  const [open, setOpen] = useState(false);
   const { id } = useContext(UserContext) || {};
+
+  const [date, setDate] = useState<Date>()
+  const [priority, setPriority] = useState("medium")
+
   const dispath:AppDispatch = useDispatch();
 
   const mainTask = useSelector(editMainTaskState);
   const mainTaskAdmin = useSelector(editMainTaskStateAdmin);
 
-
+  const [totalAdminTask] = useTotalTaskAdminMutation();
+  const [totalTaskUser] = useTotalTaskUserMutation();
   const { handleSubmit,setValue, register } = useForm({
     defaultValues: {
       title:mainTask?.title,
@@ -49,6 +60,10 @@ export const CreateTaskContent = ({ userType }: CreateTaskButtonProps) => {
       priority:mainTask?.priority
     }
   });
+
+  useEffect(()=>{
+    if(openModal) setOpen(true);
+  }, [openModal])
 
   useEffect(() => {
     if (mainTask || mainTaskAdmin) {
@@ -63,87 +78,137 @@ export const CreateTaskContent = ({ userType }: CreateTaskButtonProps) => {
 
   const onSubmit = async (data:Task) => {
     try {   
+      if(!date){
+        return null;
+      };
+      const fullData = { 
+        deadline:date,
+        description:data.description,
+        priority:priority,
+        title:data.title
+      }
+
       if(userType == 'admin'){
         if(!mainTaskAdmin){
-          dispath(createMainTask({mainTask:data}));
+          //await totalAdminTask(id).unwrap()
+          dispath(createMainTask({mainTask:fullData}));
         } else {
-          dispath(editMainTaskFunction({mainTask:data, taskId:mainTaskAdmin._id}));
+          dispath(editMainTaskFunction({mainTask:fullData, taskId:mainTaskAdmin._id}));
         }
       } else {
         if(mainTask){
-          dispath(editBreakTaskFunction({breakTask:data, taskId:mainTask._id, taskType:'mainTask'}));
+          dispath(editBreakTaskFunction({breakTask:fullData, taskId:mainTask._id, taskType:'mainTask'}));
         }else {
-   
-        dispath(createBreakTask({breakTask:data, mainTaskId:id, taskType:'mainTask'}));
+          //await totalTaskUser(id).unwrap()
+        dispath(createBreakTask({breakTask:fullData, mainTaskId:id, taskType:'mainTask', id:id}));
         } 
       }
+
+      setOpenModal(false);
       setOpen(false);
   } catch(e){
     alert('Error:' +  e);
   }
 }
-
-  
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-     
-      <DialogTrigger asChild>
-        <Button className="mb-12">Create New Task</Button>
-      </DialogTrigger>
-     
-      <DialogContent className="glass-card animate-scale-in z-[300]">
-    
-        <DialogHeader>
-          <DialogTitle>Create New Task</DialogTitle>
-        </DialogHeader>
-     
-        <form onSubmit={
-          // @ts-ignore
-          handleSubmit(onSubmit)}>
-          <div className="space-y-4 mt-4 z-[300]">
-          <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-            <Input { ...register("title", { required:true }) } 
-            id="title" placeholder='Enter Break task title' />
-          </div>
-          <div className="space-y-2">
-            <DialogDescription>Description</DialogDescription>
-            <Textarea { ...register("description", { required:true }) }
-             id="description" placeholder="Enter task description" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Priority</Label>
-              <Select onValueChange={(value: "low" | "medium" | "high") => setValue("priority", value)}>
-                <SelectTrigger className="z-[300]">
-                  <SelectValue placeholder="Select priority"/>
-
-                </SelectTrigger>
-                <SelectContent className="z-[300]">
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="dueDate">Due Date</Label>
-              <Input 
-              { ...register("deadline", { required:true }) }
-              id="dueDate" type="date" />
-            </div>
-          </div>
-
-
-         <CreateTaskButton name="Add Task"/>
-        
-
-
-          </div>
-        </form>
+    <Dialog open={open} onOpenChange={()=>{
+      setOpen(false);
+      setOpenModal(false);
+    }}>
     
    
+      <DialogContent className="sm:max-w-[500px] bg-zinc-900 border-zinc-800 text-zinc-100 shadow-xl">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-white">Create a Task</DialogTitle>
+            <DialogDescription className="text-zinc-400">
+              Add a new task to your list. Fill out the details below.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-6 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="name" className="text-zinc-300">
+                Task Name
+              </Label>
+              <Input
+                id="name"
+                placeholder="Enter task name"
+                { ...register("title", { required:true }) } 
+                className="bg-zinc-800 border-zinc-700 focus:border-violet-500 text-white"
+                required
+              />
+            </div>
+            
+            <div className="grid gap-2">
+              <Label htmlFor="description" className="text-zinc-300">
+                Description
+              </Label>
+              <Textarea
+                id="description"
+                placeholder="Add details about this task"
+                { ...register("description", { required:true }) }
+                className="bg-zinc-800 border-zinc-700 focus:border-violet-500 text-white min-h-[120px]"
+              />
+            </div>
+            
+            <div className="grid gap-2">
+              <Label htmlFor="date" className="text-zinc-300">
+                Due Date
+              </Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    id="date"
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal bg-zinc-800 border-zinc-700 hover:bg-zinc-700",
+                      !date && "text-zinc-500"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Select a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 bg-zinc-800 border-zinc-700" align="start">
+                  <Calendar setDate={setDate}/>
+                </PopoverContent>
+              </Popover>
+            </div>
+            
+            <div className="grid gap-2">
+              <Label htmlFor="priority" className="text-zinc-300">
+                Priority
+              </Label>
+            
+              <PrioritySelect 
+                value={priority} 
+                onChange={setPriority} 
+                id="priority" 
+              />
+            </div>
+          </div>
+          
+          <DialogFooter className="flex gap-2 sm:gap-0">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700 text-zinc-300"
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              className="bg-violet-600 hover:bg-violet-700 text-white"
+            >
+              Create Task
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
+
+
 
     </Dialog>
   );

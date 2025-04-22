@@ -11,17 +11,19 @@ import { AppDispatch } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { createBreakTask, editBreakTaskFunction, editBreakTaskState, isEditTask } from "../../redux/reduxSlice/breakTaskSlice";
 import { useForm } from "react-hook-form";
-import { Task } from "../../taskDashboard/types/task";
+import { Task } from "../../types/task";
 
 const BreakTaskModal = () => {
   const { breakTaskChangeSignal, setBreakTaskChangeSignal } = useContext(UserContext) || {};
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const { id } = useContext(UserContext) || {};
   const dispatch:AppDispatch = useDispatch()
   const { mainTask } = useContext(UserContext) || {};
   const breakTaskState = useSelector(editBreakTaskState);
   const { register, handleSubmit, reset, formState:{ errors } } = useForm<Task>();
   
+  console.log(mainTask);
+
   useEffect(() => {
     if (breakTaskState) {
         reset({
@@ -38,9 +40,7 @@ const BreakTaskModal = () => {
       }
       setIsSubmitting(true);
       if(!breakTaskState) {
-        dispatch(createBreakTask(
-          {breakTask:breakTaskSubmit, mainTaskId:mainTask?._id, taskType:'breakTask'}
-        ));
+        dispatch(createBreakTask({breakTask:breakTaskSubmit, mainTaskId:mainTask?._id, taskType:'breakTask', id:id || ''}));
       } else {
         dispatch(editBreakTaskFunction({
           breakTask:breakTaskSubmit, taskId:breakTaskState._id, taskType:'breakTask'}

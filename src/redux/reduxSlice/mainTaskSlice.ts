@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Task } from '../../taskDashboard/types/task';
+import { Task } from '../../types/task';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import adminApi from '../adminApi/adminApi';
 import { TaskType } from '../../types/TaskType';
@@ -14,6 +14,18 @@ const initialState: BreakTaskState  = {
   editMainTask:null
 };
 
+const UpdateMainTaskArray = (mainTaskArray:Task[]) =>{
+ 
+  return mainTaskArray.map(task => {
+    const totalTask = task.userId.length;
+    const completedTask = task.userId.filter(i => i.completed == 'true').length;
+   
+    if (totalTask === completedTask && totalTask !== 0) {
+      return { ...task, completed: true }; // Создаём обновлённый объект
+    }
+    return task; // Возвращаем неизменённый, если условие не выполнено
+});
+}
 export const fetchMainTask = createAsyncThunk(
   '/fetch/mainTask', 
     async (_, { rejectWithValue, dispatch }) => {
@@ -65,8 +77,8 @@ export const createMainTask = createAsyncThunk<Task, { mainTask: Task  }>(
   }
 );
 
-export const makeCompleteBreakTask = createAsyncThunk<Task[], { breakTaskId: Task}>(
-  '/makeComplete/breakTask', async ({ breakTaskId } , { rejectWithValue, dispatch }) => {
+export const makeCompleteTask = createAsyncThunk<Task[], { breakTaskId: Task}>(
+  '/makeComplete/mainTask', async ({ breakTaskId } , { rejectWithValue, dispatch }) => {
     try {
 
       const data = await dispatch(
@@ -97,7 +109,7 @@ export const editMainTaskFunction = createAsyncThunk<Task[], { mainTask: Task, t
 );
 
 export const makeCompleteMainTaskForTotal = createAsyncThunk<Task[], { breakTaskId: Task}>(
-  '/makeComplete/breakTask', async ({ breakTaskId } , { rejectWithValue, dispatch }) => {
+  '/makeComplete/mainTask', async ({ breakTaskId } , { rejectWithValue, dispatch }) => {
     try {
 
       const data = await dispatch(
@@ -133,17 +145,18 @@ const mainTaskSlice = createSlice({
     name: 'mainTask',
     initialState,
     reducers: {
-        isEditMainTask(state, action: PayloadAction<TaskType | null>) {
+        isEditMainTask(state, action: PayloadAction<Task | null>) {
           if(action.payload){
-            state.editMainTask = { ...action.payload }
+            state.editMainTask = { ...action.payload, option: '' }
       }    
     },
 },
      extraReducers: (builder) => {
           builder
             .addCase(fetchMainTask.fulfilled, (state, action: PayloadAction<Task[]>) => {
+              const correctMainTask = UpdateMainTaskArray(action.payload)
               if(state.mainTask.length == 0){
-                    state.mainTask = action.payload
+                    state.mainTask = correctMainTask
                 }
             })
             .addCase(fetchMainTask.rejected, (_, action) => {
@@ -151,32 +164,36 @@ const mainTaskSlice = createSlice({
             })
   
             .addCase(createMainTask.fulfilled, (state, action: PayloadAction<Task>) => {
-                state.mainTask = action.payload.mainTask
+              const correctMainTask = UpdateMainTaskArray(action.payload.mainTask)  ;
+              state.mainTask = correctMainTask;
             })
             .addCase(createMainTask.rejected, (_, action) => {
               console.error('Failed to fetch messages:', action.payload);
             })
-            .addCase(makeCompleteBreakTask.fulfilled, (state, action: PayloadAction<Task[]>) => {
-              state.mainTask = action.payload
+            .addCase(makeCompleteTask.fulfilled, (state, action: PayloadAction<Task[]>) => {
+              const correctMainTask = UpdateMainTaskArray(action.payload)  
+              state.mainTask = correctMainTask;
             })
-            .addCase(makeCompleteBreakTask.rejected, (_, action) => {
+            .addCase(makeCompleteTask.rejected, (_, action) => {
                 console.error('Failed to fetch messages:', action.payload);
             })
             .addCase(assignMainTask.fulfilled, (state, action: PayloadAction<Task[]>) => {
-
-             state.mainTask = action.payload
+              const correctMainTask = UpdateMainTaskArray(action.payload)  
+              state.mainTask = correctMainTask;
             })
             .addCase(assignMainTask.rejected, (_, action) => {
               console.error('Failed to fetch messages:', action.payload);
             })
             .addCase(editMainTaskFunction.fulfilled, (state, action: PayloadAction<Task[]>) => {
-              state.mainTask = action.payload
+              const correctMainTask = UpdateMainTaskArray(action.payload)  
+              state.mainTask = correctMainTask;
             })
             .addCase(editMainTaskFunction.rejected, (_, action) => {
               console.error('Failed to fetch messages:', action.payload);
             })
             .addCase(deleteMainTask.fulfilled, (state, action: PayloadAction<Task>) => {
-                state.mainTask = action.payload.mainTask
+              const correctMainTask = UpdateMainTaskArray(action.payload.mainTask)  
+              state.mainTask = correctMainTask;
               
             })
             .addCase(deleteMainTask.rejected, (_, action) => {

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../uiCompoents/ui/dialog";
 import { Button } from "../../../uiCompoents/ui/button";
 import { Label } from "../../../uiCompoents/ui/label";
@@ -8,13 +8,13 @@ import '../../RegisterLogin/RegisterLoginStyle.css'
 import { useForm } from 'react-hook-form';
 import { useLoginUserMutation, useRegisterUserMutation } from '../../../redux/authApi/authApi';
 import { useState } from "react";
-import LoadingSpinner from "../../../features/loadingSpinner/loadingSpinner";
 import { useToast } from "../../../uiCompoents/hooks/use-toast";
-import { useLocation, useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import {  useNavigate } from "react-router-dom";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { setAuthRole } from "../../../redux/reduxSlice/authSlice";
 import { AppDispatch } from "../../../redux/store";
+import Spinner from "../../../features/spinner/spinner";
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -31,7 +31,6 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
   const [loginApi] = useLoginUserMutation();
   const { toast } = useToast();
   const navigate = useNavigate();
-  
 const onSubmit = async (data: object) => {
     setLoading(true); 
     try {
@@ -43,222 +42,161 @@ const onSubmit = async (data: object) => {
         });
       } else if(type == 'login'){
         const response = await loginApi(data).unwrap();
-        const jwtResponst = jwtDecode(response)
+        interface CustomJwtPayload extends JwtPayload {
+          role: string;
+        }
+        const jwtResponst = jwtDecode<CustomJwtPayload>(response);
         localStorage.setItem('role', JSON.stringify(jwtResponst.role));
         dispatch(setAuthRole(jwtResponst.role))
         navigate(`/${jwtResponst.role}`)
       }
     } catch (e) {
+      const errorMessage = (e as { data?: string })?.data || "Unknown error";
       toast({
         title: "Error",
-        description: `Failed to create account:${e.data}`,
+        description: `Failed to create account: ${errorMessage}`,
       });
     } finally {
       setLoading(false); // В любом случае выключаем загрузку
     }
   };
  
-  return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="glass-modal sm:max-w-md">
-        <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-primary/20 to-transparent -z-10" />
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-2xl font-bold">
-            {type === 'login' ? (
-              <>
-                <LogIn className="h-5 w-5 text-primary" />
-                <span>Welcome Back</span>
-              </>
-            ) : (
-              <>
-                <UserPlus className="h-5 w-5 text-primary" />
-                <span>Join TeamSync</span>
-              </>
-            )}
-          </DialogTitle>
-        </DialogHeader>
-        
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-        {type === 'register' && (
-            <div className="space-y">
-              <Label htmlFor="name" className="text-sm font-medium">
-          Full Name
-              </Label>
-              <Input
-        id="username" // Consistent with the field name
-        {...register("username", { 
-          required: "This field is required!", // You can add a message
-          minLength: {
-            value: 5, // Minimum length of 5 characters
-            message: "At least 5 characters!"
-          },
-          maxLength: {
-            value: 15,
-            message: "No more than 15 characters!"
-          },
-          pattern: {
-            value: /^\S+$/, // Only non-whitespace characters
-            message: "Spaces are not allowed!"
-          }
-        })}
-             
-        className="bg-secondary/50 border-secondary"
-        placeholder="Enter your name"/>
-            {errors.username && <p className="text-red-500">{errors.username.message}</p>}
-         
-        </div>
-           
+return <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+<DialogContent className="bg-gradient-to-b from-[#0d1117] to-[#1a2232] border border-[#2d3748] rounded-3xl p-8 max-w-md space-y-6 shadow-xl">
+  <DialogHeader>
+    <div className="flex flex-col items-center text-center space-y-3">
+      <div className="p-4 rounded-full bg-[#1e2a3a] shadow-lg mb-2">
+        {type === 'login' ? (
+          <LogIn className="h-7 w-7 text-cyan-400" />
+        ) : (
+          <UserPlus className="h-7 w-7 text-cyan-400" />
         )}
-            { type === 'register' && 
-          <div className="space-y">
-          <Label htmlFor="login" className="text-sm font-medium">
+      </div>
+      <DialogTitle className="text-3xl font-extrabold text-white drop-shadow-sm">
+        {type === 'login' ? 'Welcome Back' : 'Create Account'}
+      </DialogTitle>
+     
+    </div>
+  </DialogHeader>
+
+  <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    {type === 'register' && (
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="username" className="text-cyan-100">
+            First name
+          </Label>
+          <Input
+            id="username"
+            {...register("username")}
+            className="bg-[#1f2937] text-white border border-[#374151] focus:ring-2 focus:ring-cyan-500"
+            placeholder="John"
+          />
+          {errors.username && (
+            <p className="text-sm text-red-400 mt-1">{errors.username?.message?.toString()}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="lastname" className="text-cyan-100">
             Last name
           </Label>
           <Input
-            id="Lastname"
-            type="text"
-            { ...register('lastname', { required:true, 
-          minLength: {
-            value: 3, // Minimum length of 3 characters
-            message: "At least 3 characters!"
-          },
-          maxLength: {
-            value: 15,
-            message: "No more than 15 characters!"
-          },
-          pattern: {
-            value: /^\S+$/, // Only non-whitespace characters
-            message: "Spaces are not allowed!"
-          }
-             } ) }
-            className="bg-secondary/50 border-secondary"
-            placeholder="Enter your login"
-            required
+            id="lastname"
+            {...register('lastname')}
+            className="bg-[#1f2937] text-white border border-[#374151] focus:ring-2 focus:ring-cyan-500"
+            placeholder="Doe"
           />
-          {errors.lastname && <p className="text-red-500">{errors.lastname.message}</p>}
-        </div>
-            }
-          <div className="space-y">
-            <Label htmlFor="text" className="text-sm font-medium">
-              Login
-            </Label>
-            <Input
-              id="login"
-              type="text"
-              { ...register('login', { required:true, 
-            minLength: {
-              value: 3, // Minimum length of 3 characters
-              message: "At least 3 characters!"
-            },
-            maxLength: {
-              value: 15,
-              message: "No more than 15 characters!"
-            },
-            pattern: {
-              value: /^\S+$/, // Only non-whitespace characters
-              message: "Spaces are not allowed!"
-            }
-               } ) }
-              className="bg-secondary/50 border-secondary"
-              placeholder="Enter your login"
-              required
-            />
-            {errors.login && <p className="text-red-500">{errors.login.message}</p>}
-          </div>
-            
-          <div className="space-y">
-            <Label htmlFor="password" className="text-sm font-medium">
-              Password
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              { ...register('password', { required:true,
-            minLength: {
-              value: 8, // Minimum length of 8 characters
-              message: "At least 8 characters!"
-            },
-            pattern: {
-              value: /^\S+$/, // Only non-whitespace characters
-              message: "Spaces are not allowed!"
-            }
-               })}
-              className="bg-secondary/50 border-secondary"
-              placeholder="Enter your password"
-              required
-            />
-            {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-          </div>
-            
-            { type == 'register' && (
-        <div id="firstFilter" className="filter-switch">
-        <input
-             {...register("role", { required: true })}
-          id="option1"
-          type="radio"
-          value="user" // Set a value for this radio button
-          defaultChecked
-             />
-        <label className="option" htmlFor="option1">User</label>
-
-        <input
-             {...register("role", { required: true })}
-          id="option2"
-          type="radio"
-          value="admin" // Set a value for this radio button
-        />
-        <label className="option" htmlFor="option2">Admin</label>
-
-        <span className="background"></span>
-            </div>
-            ) }    
-            
-
-          <Button 
-            type="submit" 
-            className={`w-full ${ !loading  ? 'bg-primary' : 'bg-white/30'}  hover:bg-primary/90 transition-colors `}>
-           
-           { loading && <LoadingSpinner/> }
-           {type === 'login' ? 'Login' : 'Create Account'}
-          
-          </Button>
-          
-          {type === 'login' ? (
-            <p className="text-center text-sm text-muted-foreground">
-              Don't have an account?{" "}
-              <button
-          type="button"
-          className="text-primary hover:underline"
-          onClick={() => {
-            onClose();
-            setTimeout(() => onClose(), 100);
-          }}
-              >
-         
-          Sign up
-              </button>
-            </p>
-          ) : (
-            <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
-              
-              <button
-          type="button"
-          className="text-primary hover:underline"
-          onClick={() => {
-            onClose();
-            setTimeout(() => onClose(), 100);
-          }}
-              >
-          Sign in
-              </button>
-            </p>
+          {errors.lastname && (
+            <p className="text-sm text-red-400 mt-1">{errors?.lastname?.message?.toString()}</p>
           )}
-        </form>
+        </div>
+      </div>
+    )}
 
-      </DialogContent>
-    </Dialog>
-  );
+    <div className="space-y-2">
+      <Label htmlFor="login" className="text-cyan-100">
+        Username
+      </Label>
+      <Input
+        id="login"
+        {...register('login')}
+        className="bg-[#1f2937] text-white border border-[#374151] focus:ring-2 focus:ring-cyan-500"
+        placeholder="johndoe"
+      />
+      {errors.login && (
+        <p className="text-sm text-red-400 mt-1">{errors?.login?.message?.toString()}</p>
+      )}
+    </div>
+
+    <div className="space-y-2">
+      <Label htmlFor="password" className="text-cyan-100">
+        Password
+      </Label>
+      <Input
+        id="password"
+        type="password"
+        {...register('password')}
+        className="bg-[#1f2937] text-white border border-[#374151] focus:ring-2 focus:ring-cyan-500"
+        placeholder="••••••••"
+      />
+      {errors.password && (
+        <p className="text-sm text-red-400 mt-1">{errors?.password?.message?.toString()}</p>
+      )}
+    </div>
+
+    {type === 'register' && (
+      <div className="space-y-2">
+        <Label className="text-cyan-100">Account Type</Label>
+        <div className="flex gap-3">
+          <label className="flex-1">
+            <input
+              type="radio"
+              {...register("role")}
+              value="user"
+              className="peer hidden"
+            />
+            <div className="p-3 text-center rounded-xl border border-[#374151] peer-checked:border-cyan-500 peer-checked:bg-[#132736] cursor-pointer transition-all text-white">
+              Member
+            </div>
+          </label>
+          <label className="flex-1">
+            <input
+              type="radio"
+              {...register("role")}
+              value="admin"
+              className="peer hidden"
+            />
+            <div className="p-3 text-center rounded-xl border border-[#374151] peer-checked:border-cyan-500 peer-checked:bg-[#132736] cursor-pointer transition-all text-white">
+              Admin
+            </div>
+          </label>
+        </div>
+      </div>
+    )}
+
+    <Button
+      type="submit"
+      className="w-full h-12 text-base font-semibold bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl transition-all duration-200 shadow-md"
+      disabled={loading}
+    >
+      {loading ? (
+        <div className="flex items-center gap-2">
+          <Spinner />
+          Processing...
+        </div>
+      ) : type === 'login' ? (
+        'Sign In'
+      ) : (
+        'Create Account'
+      )}
+    </Button>
+
+ 
+  </form>
+</DialogContent>
+
+</Dialog>
 };
 
 export default AuthModal;

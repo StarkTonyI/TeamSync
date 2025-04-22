@@ -7,6 +7,7 @@ express().use(cookie());
 const Command = require('../command/command.model.js');
 const User = require('../auth/auth.module.js');
 const mongoose = require('mongoose');
+const totalTask = require('../analyzeUser/analyzeUser.module.js');
 
 express().use(cors({
   origin: process.env.FRONTEND_URL,
@@ -138,7 +139,6 @@ router.get('/fetch/user/mainTask/:id', async(req, res)=>{
       throw new Error("У задачи нет пользователей");
     }
     
-//
     const usersMainTask = await User.find({ _id:{ $in: ids } });
     
 
@@ -163,7 +163,8 @@ router.put('/create/task', async(req, res)=>{
           status:'todo',
           progress:0,
           priority:data.priority,
-          userId:[]
+          userId:[],
+          creatAt:new Date()
     }   
         const updateTask = await User.findByIdAndUpdate(
           userData.id,
@@ -208,13 +209,21 @@ router.put('/delete/mainTask/:id', async(req, res)=>{
       try{
           const { id } = req.params;
           const objectId = new mongoose.Types.ObjectId(id);
-       
+          if(!objectId){
+            return res.status(404);
+          }
         
           const deleteMainTask = await User.findOneAndUpdate(
               { "mainTask._id": objectId },
               { $pull: { mainTask: { _id: objectId } } },
               { new: true }
           );
+        
+        await totalTask.updateOne(
+        { "allTask._id": objectId }, // находим документ, где есть нужный _id во вложенном массиве
+        { $set: { "allTask.$.deleted": true } } // обновляем только нужный элемент
+);
+
           res.status(200).json(deleteMainTask)
       }catch(err){
           res.status(400).json('Error:' + err);

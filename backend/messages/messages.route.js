@@ -62,14 +62,17 @@ router.get('/fetch/lastMessages', async(req, res)=>{
     try {
         const adminOrUserData = req.user;
         const adminOrUserDataId = adminOrUserData.id;
-        const ObjectId = new mongoose.Types.ObjectId(adminOrUserDataId);
-        const findCommand = await Command.findOne({
-            $or: [
-              { admin: ObjectId },
-              { "users.id": adminOrUserDataId }
-            ]
-          });
 
+        const ObjectId = new mongoose.Types.ObjectId(adminOrUserDataId);
+    
+const findCommand = await Command.findOne({
+  $or: [
+    { admin: ObjectId },
+    { "users.id": adminOrUserDataId },
+    { "users.id": ObjectId }
+  ]
+});
+   
         const findCommandUsers = findCommand.users;
         const findMessages = await getLastMessagesForUsers(findCommandUsers, adminOrUserDataId);
         res.status(200).json(findMessages);

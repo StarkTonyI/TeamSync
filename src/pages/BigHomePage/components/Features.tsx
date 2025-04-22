@@ -1,58 +1,9 @@
 
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Check, Users, Calendar, ChartBar, Rocket } from 'lucide-react';
 import ImageLoader from './ImageLoader';
-import { cn } from '../../../uiCompoents/lib/utils';
+import { motion } from 'framer-motion';
 
-interface FeatureProps {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  index: number;
-}
-
-const Feature = ({ title, description, icon, index }: FeatureProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          ref.current?.classList.add('opacity-100');
-          ref.current?.classList.add('translate-y-0');
-        }
-      },
-      { threshold: 0.1 }
-    );
-    
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-    
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, []);
-  
-  return (
-    <div 
-      ref={ref}
-      className={cn(
-        "glass-card rounded-xl p-6 opacity-0 translate-y-8 transition-all duration-700",
-        `delay-[${index * 100}ms]`
-      )}
-      style={{ transitionDelay: `${index * 100}ms` }}
-    >
-      <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-        {icon}
-      </div>
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-muted-foreground">{description}</p>
-    </div>
-  );
-};
 
 const Features = () => {
   const featuresRef = useRef<HTMLDivElement>(null);
@@ -103,99 +54,133 @@ const Features = () => {
   ];
 
   return (
-    <section id="features" className="py-24 relative overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute top-1/3 -right-20 w-40 h-40 bg-primary/10 rounded-full filter blur-3xl z-0" />
-      <div className="absolute bottom-1/3 -left-10 w-40 h-40 bg-primary/5 rounded-full filter blur-3xl z-0" />
-      
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-center gap-16">
-          <div className="md:w-1/2">
-            <div 
-              ref={featuresRef}
-              className="opacity-0 translate-y-8 transition-all duration-700"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Features designed for <span className="text-gradient">modern teams</span>
-              </h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Our platform provides everything you need to optimize teamwork and achieve your goals together.
-              </p>
-              
-              <ul className="space-y-4">
-                {[
-                  "Intuitive interface for teams of all sizes",
-                  "Secure data handling with enterprise-grade encryption",
-                  "Custom workflows tailored to your team's needs",
-                  "Seamless integration with your existing tools"
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+<section id="features" className="py-24 relative overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950/80">
+  {/* Floating background elements */}
+  <div className="absolute top-1/3 -right-20 w-60 h-60 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-full blur-[100px] z-0" />
+  <div className="absolute bottom-1/3 -left-20 w-80 h-80 bg-gradient-to-r from-purple-600/15 to-pink-600/15 rounded-full blur-[120px] z-0" />
+  
+  <div className="container mx-auto px-4">
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="flex flex-col md:flex-row items-center gap-16"
+    >
+      {/* Text Content */}
+      <div className="md:w-1/2 space-y-8">
+        <div className="space-y-6">
+          <motion.h2 
+            className="text-4xl md:text-5xl font-bold leading-tight"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            Built for <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Next-Gen</span> Collaboration
+          </motion.h2>
           
-          <div className="md:w-1/2">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {features.map((feature, i) => (
-                <Feature
-                  key={i}
-                  title={feature.title}
-                  description={feature.description}
-                  icon={feature.icon}
-                  index={i}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-        
-        {/* Product showcase */}
-        <div className="mt-24 relative">
-          <div className="glass-card rounded-2xl overflow-hidden">
-            <div className="pt-8 pb-4 px-8 text-center">
-              <h3 className="text-2xl font-semibold mb-2">Seamless Teamwork Experience</h3>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Our intuitive dashboard brings together all the tools your team needs in one place.
-              </p>
-            </div>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10" />
-              <ImageLoader
-                src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80"
-                alt="TeamSync Dashboard"
-                className="w-full h-auto"
-              />
-            </div>
-          </div>
+          <p className="text-lg text-slate-400/90 leading-relaxed">
+            Empower your team with cutting-edge features designed for seamless coordination, 
+            intelligent automation, and real-time productivity.
+          </p>
           
-          {/* Feature badges */}
-          <div className="absolute -top-4 left-1/4 glass-card px-3 py-2 rounded-lg shadow-lg">
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-primary" />
-              <span className="text-xs font-medium">Task Management</span>
-            </div>
-          </div>
-          
-          <div className="absolute top-1/4 -right-2 glass-card px-3 py-2 rounded-lg shadow-lg">
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-primary" />
-              <span className="text-xs font-medium">Project Timeline</span>
-            </div>
-          </div>
-          
-          <div className="absolute bottom-1/4 left-10 glass-card px-3 py-2 rounded-lg shadow-lg">
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-primary" />
-              <span className="text-xs font-medium">Team Chat</span>
-            </div>
-          </div>
+          <ul className="space-y-5">
+            {[
+              "AI-powered workflow automation",
+              "Military-grade security protocols",
+              "Customizable team environments",
+              "100+ integrations ecosystem"
+            ].map((item, i) => (
+              <motion.li 
+                key={i}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 + 0.4 }}
+                className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/50 backdrop-blur-sm hover:bg-slate-800/50 transition-colors"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-blue-500/10">
+                    <Check className="h-5 w-5 text-blue-400" />
+                  </div>
+                  <span className="text-slate-300/90">{item}</span>
+                </div>
+              </motion.li>
+            ))}
+          </ul>
         </div>
       </div>
-    </section>
+
+      {/* Features Grid */}
+      <div className="md:w-1/2 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {features.map((feature, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="p-6 rounded-2xl bg-slate-800/30 border border-slate-700/50 backdrop-blur-lg hover:bg-slate-800/50 transition-colors group"
+            >
+              <div className="mb-4">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 w-max">
+                  {feature.icon}
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold text-slate-100 mb-2">{feature.title}</h3>
+              <p className="text-slate-400/90 text-sm leading-relaxed">{feature.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+
+    {/* Dashboard Showcase */}
+    <motion.div 
+      className="mt-24 relative"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+    >
+      <div className="rounded-3xl overflow-hidden border border-slate-700/50 bg-slate-800/20 backdrop-blur-xl shadow-2xl shadow-slate-950/50">
+        <div className="pt-12 pb-8 px-12 text-center">
+          <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
+            Unified Workspace
+          </h3>
+          <p className="text-slate-400/90 max-w-2xl mx-auto leading-relaxed">
+            Experience the future of team collaboration with our intelligent dashboard
+          </p>
+        </div>
+        <div className="relative -mt-8">
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 to-transparent z-10" />
+          <ImageLoader
+            src="https://images.unsplash.com/photo-1551434678-e076c223a692"
+            alt="Dashboard"
+            className="w-full h-auto scale-[1.02] hover:scale-100 transition-transform duration-500"
+          />
+        </div>
+      </div>
+
+      {/* Animated Feature Badges */}
+      {[
+        { label: "Smart Analytics", position: "top-24 left-24" },
+        { label: "Live Updates", position: "top-1/3 right-16" },
+        { label: "AI Assistant", position: "bottom-32 left-40" }
+      ].map((badge, i) => (
+        <motion.div
+          key={i}
+          initial={{ scale: 0, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", delay: i * 0.2 + 0.5 }}
+          className={`absolute ${badge.position} flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-800/50 border border-slate-700/50 backdrop-blur-md shadow-lg hover:-translate-y-1 transition-transform`}
+        >
+          <div className="h-2.5 w-2.5 rounded-full bg-blue-400 animate-pulse" />
+          <span className="text-sm font-medium text-slate-300">{badge.label}</span>
+        </motion.div>
+      ))}
+    </motion.div>
+  </div>
+</section>
   );
 };
 

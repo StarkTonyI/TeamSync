@@ -43,7 +43,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team, onClick, isActive }) => {
           
           <div className="flex items-center mt-1 text-muted-foreground text-sm">
             <Users className="h-4 w-4 mr-1" />
-            <span>{team.users.length} members</span>
+            <span>{team.users?.length} members</span>
             <span className="mx-2">•</span>
             <span>{team.commandMemberNumber} open position </span>
           </div>

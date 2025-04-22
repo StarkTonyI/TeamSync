@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import UserFindModal from './components/UserFindModal';
 
 
@@ -14,20 +14,17 @@ export interface UsersListType {
  interface CommandType {
   usersList:UsersListType;
   openUserSearch:boolean;
+  setOpenUserSearch:Dispatch<SetStateAction<boolean>>;
 }
 
-const UserModalSearch = ({ usersList, openUserSearch }:CommandType ) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
- 
-  useEffect(()=>{
-    if(openUserSearch) setIsModalOpen(true);
-  }, [openUserSearch]);
+const UserModalSearch = ({ usersList, openUserSearch, setOpenUserSearch }:CommandType ) => {
+  
 
   return (
     <div >
-    { usersList && <UserFindModal isOpen={isModalOpen} 
+    { usersList && <UserFindModal  isOpen={openUserSearch} 
     // @ts-ignore
-    onClose={()=>setIsModalOpen(false)} usersList={usersList}/>  } 
+    onClose={()=>setOpenUserSearch(false)} usersList={usersList}/>  } 
 
     </div>
 

@@ -6,11 +6,13 @@ import { Input } from '../../../uiCompoents/ui/input';
 import { Textarea } from '../../../uiCompoents/ui/textarea';
 import { Slider } from '../../../uiCompoents/ui/slider';
 import TeamImageUpload from './TeamImageUpload';
-import { Users, Plus } from 'lucide-react';
+import { Users, Plus, ClipboardList, Hash, Target, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import getBaseUrl from '../../../features/getBaseUrl';
+import { motion } from 'framer-motion';
+import { Label } from '../../../uiCompoents/ui/label';
 
 interface FormData {
   commandName: string;
@@ -108,125 +110,134 @@ const TeamForm: React.FC = () => {
     setFormData(prev => ({ ...prev, maxUsers: value[0] }));
   };
   
-  const getAnimationDelay = (index: number) => {
-    return { animationDelay: `${0.2 + index * 0.1}s` };
-  };
-
-
-
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
-      <TeamImageUpload onImageChange={handleImageChange} />
-      
+    <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto space-y-12">
+    <TeamImageUpload onImageChange={handleImageChange} />
+
+    <motion.div 
+      className="space-y-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.2 }}
+    >
+      {/* Team Details Section */}
       <div className="space-y-6">
-        <div className="animate-fade-up" style={getAnimationDelay(0)}>
-          <div className="inline-block px-2.5 py-1 mb-2 rounded-full bg-white/10 text-xs font-medium tracking-wider text-white/70">
-            TEAM DETAILS
-          </div>
-          
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-white/80 mb-1.5">
-                Team Name
-              </label>
-              <Input
-                id="name"
-                name="commandName"
-                placeholder="Enter team name"
-                value={formData.commandName}
-                onChange={handleChange}
-                className="bg-white/5 border-white/10 input-focus-effect h-12"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-white/80 mb-1.5">
-                Command Task
-              </label>
-              <Input
-                id="name"
-                name="commandTask"
-                placeholder="Enter command task"
-                value={formData.commandTask}
-                onChange={handleChange}
-                className="bg-white/5 border-white/10 input-focus-effect h-12"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-white/80 mb-1.5">
-                Description
-              </label>
-              <Textarea
-                id="description"
-                name="commandDescription"
-                placeholder="What's this team about?"
-                value={formData.commandDescription}
-                onChange={handleChange}
-                className="bg-white/5 border-white/10 input-focus-effect min-h-[120px] resize-none"
-              />
-            </div>
-          </div>
+        <div className="flex items-center gap-3 text-slate-300 font-medium border-b border-slate-700/50 pb-4">
+          <ClipboardList className="h-5 w-5 text-blue-400" />
+          <span>Team Configuration</span>
         </div>
-        
-        <div className="animate-fade-up" style={getAnimationDelay(1)}>
-          <div className="inline-block px-2.5 py-1 mb-3 rounded-full bg-white/10 text-xs font-medium tracking-wider text-white/70 flex items-center gap-1.5">
-            <Users size={12} />
-            <span>TEAM CAPACITY</span>
-          </div>
-          
-          <div className="glass-morphism p-6 rounded-xl">
-            <div className="flex justify-between items-center mb-6">
-              <span className="text-sm text-white/70">Members allowed</span>
-              <div className="bg-white/10 rounded-lg px-3 py-1 text-white font-medium">
-                {formData.maxUsers}
-              </div>
-            </div>
-            
-            <Slider
-              defaultValue={[5]}
-              max={20}
-              min={1}
-              step={1}
-              value={[formData.maxUsers]}
-              onValueChange={handleUserSliderChange}
-              className="my-4"
+
+        <div className="space-y-6">
+          <div className="space-y-3">
+            <Label htmlFor="name" className="flex items-center gap-2 text-slate-300">
+              <Hash className="h-4 w-4 text-blue-400" />
+              Team Identity
+            </Label>
+            <Input
+              name="commandName"
+              placeholder="CyberNova Squad"
+              value={formData.commandName}
+              onChange={handleChange}
+              className="bg-slate-800/50 border-slate-700 focus:border-blue-400/50 rounded-xl h-12 px-4 text-slate-200 placeholder-slate-500 focus:ring-0"
             />
-            
-            <div className="flex justify-between text-xs text-white/50 px-1">
-              <span>1</span>
-              <span>5</span>
-              <span>10</span>
-              <span>15</span>
-              <span>20</span>
-            </div>
           </div>
-        </div>
-        
-        <div 
-          className="pt-6 animate-fade-up flex justify-center" 
-          style={getAnimationDelay(2)}
-        >
-          <Button 
-            type="submit" 
-            className="bg-white text-black hover:bg-white/90 transition-all px-8 py-6 h-auto rounded-full group button-shine min-w-[200px]"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <div className="flex items-center gap-2">
-                <div className="h-4 w-4 border-2 border-black/20 border-t-black/80 rounded-full animate-spin" />
-                <span>Creating...</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Plus size={18} className="group-hover:scale-110 transition-transform" />
-                <span>Create Team</span>
-              </div>
-            )}
-          </Button>
+
+          <div className="space-y-3">
+            <Label htmlFor="task" className="flex items-center gap-2 text-slate-300">
+              <Target className="h-4 w-4 text-purple-400" />
+              Mission Objective
+            </Label>
+            <Input
+              name="commandTask"
+              placeholder="Develop next-gen AI solutions"
+              value={formData.commandTask}
+              onChange={handleChange}
+              className="bg-slate-800/50 border-slate-700 focus:border-purple-400/50 rounded-xl h-12 px-4 text-slate-200 placeholder-slate-500 focus:ring-0"
+            />
+          </div>
+
+          <div className="space-y-3">
+            <Label htmlFor="description" className="flex items-center gap-2 text-slate-300">
+              <FileText className="h-4 w-4 text-amber-400" />
+              Team Manifesto
+            </Label>
+            <Textarea
+              name="commandDescription"
+              placeholder="Describe your team's vision, goals and culture..."
+              value={formData.commandDescription}
+              onChange={handleChange}
+              className="bg-slate-800/50 border-slate-700 focus:border-amber-400/50 rounded-xl min-h-[150px] p-4 text-slate-200 placeholder-slate-500 focus:ring-0"
+            />
+          </div>
         </div>
       </div>
-    </form>
+
+      {/* Team Capacity Section */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 text-slate-300 font-medium border-b border-slate-700/50 pb-4">
+          <Users className="h-5 w-5 text-emerald-400" />
+          <span>Team Capacity</span>
+        </div>
+
+        <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-6 backdrop-blur-lg">
+          <div className="flex justify-between items-center mb-6">
+            <span className="text-slate-400/90">Collaboration Scale</span>
+            <div className="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-lg border border-blue-500/30">
+              {formData.maxUsers} Members
+            </div>
+          </div>
+
+          <Slider
+            value={[formData.maxUsers]}
+            onValueChange={handleUserSliderChange}
+            min={1}
+            max={20}
+            step={1}
+            className="my-6"
+            //@ts-ignore
+            thumbClassName="h-5 w-5 bg-blue-500 border-2 border-blue-300/50 focus:ring-4 focus:ring-blue-500/20"
+            trackClassName="bg-slate-700 h-2 rounded-full"
+            rangeClassName="bg-blue-500 h-2 rounded-full"
+          />
+
+          <div className="flex justify-between text-sm text-slate-500 px-1">
+            {[1, 5, 10, 15, 20].map((num) => (
+              <span key={num} className="w-8 text-center">{num}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <motion.div 
+        className="pt-8 flex justify-center"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        <Button 
+          type="submit" 
+          className="relative overflow-hidden w-full max-w-xs py-6 text-lg font-medium rounded-xl
+            bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 
+            shadow-xl shadow-blue-500/20 hover:shadow-blue-500/30
+            transition-all duration-300"
+          disabled={isSubmitting}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10 opacity-0 hover:opacity-100 transition-opacity" />
+          {isSubmitting ? (
+            <div className="flex items-center gap-2 justify-center">
+              <div className="h-5 w-5 border-2 border-white/30 border-t-white/80 rounded-full animate-spin" />
+              <span>Assembling Team...</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 justify-center">
+              <Plus className="h-5 w-5 transition-transform group-hover:rotate-90" />
+              <span>Launch Team</span>
+            </div>
+          )}
+        </Button>
+      </motion.div>
+    </motion.div>
+  </form>
   );
 };
 

@@ -13,9 +13,8 @@ import { AppDispatch } from "../../redux/store.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/reduxSlice/authSlice.ts";
 import { useNavigate } from "react-router-dom";
-import HeadersNavigate from "../headersNavigate/headersNavigate.tsx";
 import getBaseUrl from "../../features/getBaseUrl.ts";
-import Spinner from "../../features/spinner/spinner.tsx";
+import { DashboardLayout } from "../updatedAnalyzePage/dashboard/DashboardLayout.tsx";
 
 interface EditTask {
   name:string, 
@@ -57,7 +56,7 @@ const UserProfile = () => {
         title: "Logging out...",
         description: "You have been successfully logged out.",
       });
-      
+      localStorage.removeItem('chart_start_date')
       localStorage.removeItem('role');
       dispath(logout());
       await leaveProfile(data.id).unwrap(); 
@@ -128,41 +127,41 @@ const UserProfile = () => {
   }
 
   return (
+    <DashboardLayout>
 
-    <div className="min-h-screen relative bg-[rgb(10,11,31)] p-6 md:p-8 mx-auto ">
-     
-
-        <div className="absolute right-4 top-1">
-            <HeadersNavigate image={image}/>
-          </div>
-
+<div className="min-h-screen relative bg-gradient-to-br
+  from-slate-900 to-slate-950 p-6 pt-20 md:p-8 mx-auto w-full">
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.5 }}
+    className="space-y-8"
+  >
+    <div className="text-center space-y-6">
       <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="space-y-8">
-            
-        {/* Profile Header */}
-        <div className="text-center space-y-4">
-       
-        
-          <motion.div 
-            initial={{ scale: 0.5 }}
-            animate={{ scale: 1 }}
-            className="flex items-center justify-center ">
-      <div className="relative w-64 h-64 cursor-pointer"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        initial={{ scale: 0.5 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", stiffness: 100 }}
+        className="flex items-center justify-center"
       >
-
-      <img 
-        src={image || data?.image || UserPng}
-        alt="Base"     
-        className={`w-full h-full rounded-full object-cover 
-          transition-opacity duration-50 ${isHovered ? "opacity-30" : "opacity-100"} 
-          `}/>
-      {isHovered && (
+        <div 
+          className="relative w-44 h-44 cursor-pointer group"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/30 to-purple-500/30 blur-xl opacity-30 group-hover:opacity-50 transition-opacity" />
+          
+          <img 
+            src={image || data?.image || UserPng}
+            alt="Base"     
+            className={`w-full h-full rounded-full object-cover border-4 border-slate-700/50 
+              transition-all duration-300 ${isHovered ? "opacity-40 scale-95" : "opacity-100"}`}
+          />
+          
+          {isHovered && (
             <label 
               htmlFor="fileInput" 
+              className="absolute inset-0 flex items-center justify-center rounded-full bg-slate-900/80 backdrop-blur-sm"
             >
               <input 
                 type="file" 
@@ -170,93 +169,118 @@ const UserProfile = () => {
                 onChange={handleImageUpload} 
                 className="hidden" 
                 id="fileInput"
-            />
-              <img 
+              />
+              <motion.img 
                 src={editPng} 
                 alt="Hovered" 
-                className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity
-                duration-50 ${isHovered ? "opacity-500" : "opacity-0"}`}
-     
-            />   
-      </label>
-   
-      )}
-  
-    </div>
-
-          
-
-
-          </motion.div>
-          <div>
-            <h1 className="text-3xl font-bold">{userForEdit?.name}</h1>
-            <p className="text-white/60">{user.role}</p>
-          </div>
-          <div className="flex justify-center gap-4">
-            <button className="button-primary flex items-center gap-2" onClick={()=>setEdit(true) }>
-              <Edit className="w-4 h-4" />
-              Edit Profile
-            </button>
-            <button 
-              onClick={handleLogout}
-              className="button-destructive flex items-center gap-2"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </button>
-          </div>
+                className="w-16 h-16 object-contain"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring" }}
+              />
+            </label>
+          )}
         </div>
-
-        {/* User Information Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InfoCard 
-            icon={Mail} 
-            title="Login Address" 
-            value={data?.login}
-          />
-          <InfoCard 
-            icon={Shield} 
-            title="Role" 
-            value={data?.role}
-          />
-          <InfoCard 
-            icon={Key} 
-            title="Username" 
-            value={data?.login}
-          />
-          <InfoCard 
-            icon={User} 
-            title="Account Status" 
-            value="Active"
-          />
-        </div>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass-card rounded-xl p-6 space-y-6">
-          <div className="flex items-center gap-2">
-            <Edit className="w-5 h-5" />
-            <h2 className="text-xl font-semibold">Account Description</h2>
-          </div>
-          <div className="space-y-4 min-h-[200px] flex overflow-x-hidden">
-              <div className="break-words overflow-hidden">{ userForEdit?.description }</div>
-          </div>
-        </motion.div>
-
-      <div className="flex items-center justify-center gap-3">
-      
-        <DeleteProfile role={ data?.role } id={data?.id}/>
-        <DeleteCommand role={ data?.role } id={data?.id}/>
-      
-      </div>
-     
-      
       </motion.div>
 
-      { edit && userForEdit && <EditProfileTask setEdit={setEdit} editMainTask={userForEdit} />}
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          {userForEdit?.name}
+        </h1>
+        <p className="text-slate-400 font-medium">{user.role}</p>
+      </div>
 
+      <div className="flex justify-center gap-4">
+        <motion.button 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800/50 hover:bg-slate-800/70 border border-slate-700/50 text-slate-300 hover:text-white transition-all"
+          onClick={() => setEdit(true)}
+        >
+          <Edit className="w-5 h-5 text-blue-400" />
+          Edit Profile
+        </motion.button>
+        
+        <motion.button 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-900/30 hover:bg-red-900/50 border border-red-800/50 text-red-400 hover:text-red-300 transition-all"
+        >
+          <LogOut className="w-5 h-5" />
+          Logout
+        </motion.button>
+      </div>
     </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <InfoCard 
+        icon={Mail} 
+        title="Login Address" 
+        value={data?.login}
+        
+      />
+      <InfoCard 
+        icon={Shield} 
+        title="Role" 
+        value={data?.role}
+      
+      />
+      <InfoCard 
+        icon={Key} 
+        title="Username" 
+        value={data?.login}
+       
+      />
+      <InfoCard 
+        icon={User} 
+        title="Account Status" 
+        value="Active"
+       
+      />
+    </div>
+
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-xl p-6 space-y-6 bg-slate-800/50 backdrop-blur-lg border border-slate-700/50 shadow-xl"
+    >
+      <div className="flex items-center gap-3">
+        <div className="p-2.5 rounded-lg bg-blue-500/20">
+          <Edit className="w-6 h-6 text-blue-400" />
+        </div>
+        <h2 className="text-xl font-semibold text-slate-100">Account Description</h2>
+      </div>
+      
+      <div className="space-y-4 min-h-[200px]">
+        <div className="text-slate-300/90 leading-relaxed tracking-wide whitespace-pre-wrap">
+          {userForEdit?.description || (
+            <span className="text-slate-500 italic">No description provided</span>
+          )}
+        </div>
+      </div>
+    </motion.div>
+
+    <div className="flex flex-col md:flex-row items-center justify-center gap-3">
+      <DeleteProfile 
+        role={data?.role} 
+        id={data?.id}
+    
+      />
+      <DeleteCommand 
+        role={data?.role} 
+        id={data?.id}
+       
+      />
+    </div>
+  </motion.div>
+
+  {edit && userForEdit && <EditProfileTask setEdit={setEdit} editMainTask={userForEdit} />}
+</div>
+
+    </DashboardLayout>
+
+ 
   );
 };
 

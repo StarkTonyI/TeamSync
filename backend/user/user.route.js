@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../auth/auth.module.js');
 const mongoose = require('mongoose');
 const Command = require('../command/command.model.js');
-
+const AnalyzeTotalBase = require('../analyzeUser/analyzeUser.module.js');
 router.get('/fetch/task/:id', async (req, res)=>{    
 try{
     const { taskType } = req.query;
@@ -36,6 +36,7 @@ router.put('/complete/breakTask/:id', async (req, res) => {
         const { id } = req.params;
         const { taskType } = req.query;
         const myId = req.user;
+        const date = new Date().toString();
         const objectId = new mongoose.Types.ObjectId(id);
         if (taskType == 'breakTask') {
             const updatedBreakTask = await User.findOneAndUpdate(
@@ -47,28 +48,54 @@ router.put('/complete/breakTask/:id', async (req, res) => {
         }
         res.status(200).json(updatedBreakTask);
         } else if (taskType == 'mainTask') {
-        
-
-    
+            
             const updatedUser = await User.findOneAndUpdate(
              { "mainTask._id": objectId }, 
-                { $set: { "mainTask.$[elem].userId.$[userElem].completed": true }  },
+                { $set:  { "mainTask.$[elem].userId.$[userElem].completed": true } },
                 { arrayFilters: [
                     { "elem._id": objectId },     
                     { "userElem.id": myId.id }   
                 ],
                 returnDocument: "after" 
-            }
-        );
+            });
+            const updatedUserAnalyze = await AnalyzeTotalBase.findOneAndUpdate(
+                    {
+                      allTask: {
+                        $elemMatch: {
+                          _id: new mongoose.Types.ObjectId(id)
+                        }
+                      }
+                    },
+                    {
+                      $push: {
+                        "allTask.$[elem].completedDate": {
+                          id: myId.id,
+                          date: date,
+                          completed: true
+                        }
+                      }
+                    },
+                    {
+                      arrayFilters: [{ "elem._id": new mongoose.Types.ObjectId(id) }],
+                      returnDocument: "after", // если ты на Mongoose >= 6, это ок. Иначе используй 'returnNewDocument: true'
+                      new: true // обязательно, чтобы получить обновлённый документ
+                    }
+                  );
+                  
+              
+
         if(updatedUser.role !== 'admin'){
             const updatedUserCard = await User.findOneAndUpdate(
                 { "mainTask._id": objectId }, // Находим нужный mainTask
                 { $set: { "mainTask.$.completed": true } }, // Обновляем поле completed
                 { returnDocument: "after" } // Возвращаем обновлённый документ
             );
-  
+          
+       
             return res.status(203).json(updatedUserCard);
+       
         }
+  
 
         if (!updatedUser) {
             return res.status(404).json({ message: "Task not found" });
@@ -193,7 +220,10 @@ router.put('/delete/breakTask/:id', async(req, res)=>{
             { $pull: { mainTask: { _id: objectId } } },
             { new: true }
         );
-        
+        await AnalyzeTotalBase.updateOne(
+            { "allTask._id": objectId }, // находим документ, где есть нужный _id во вложенном массиве
+            { $set: { "allTask.$.deleted": true } } // обновляем только нужный элемент
+    );
         res.status(200).json({id, taskType});
 
 }

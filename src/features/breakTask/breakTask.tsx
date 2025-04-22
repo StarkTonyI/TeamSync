@@ -5,8 +5,8 @@ import DeleteButton from "../deleteButton/deleteButton.js";
 import EditButton from "../editButton/editButton.js";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store.js";
-import { breakTaskState, deleteBreakTask, fetchBreakTask, isEditTask, makeCompleteBreakTask  } from "../../redux/reduxSlice/breakTaskSlice.ts"; 
-import type { Task } from "../../taskDashboard/types/task";
+import { breakTaskState, deleteBreakTask, fetchBreakTask, isEditTask  } from "../../redux/reduxSlice/breakTaskSlice.ts"; 
+import type { Task } from "../../types/task.ts";
 
 interface TaskCardProps {
   task: Task;
@@ -74,10 +74,6 @@ const deleteButtonFunction = (taskId:string) => {
   dispath(deleteBreakTask({taskId, taskType:'breakTask'}));
 }
 
-const completeBreakTaskFunction = (task:Task) => {
-// @ts-ignore
-dispath(makeCompleteBreakTask({breakTaskId:task._id}))
-}
 
 return <div className={`
   ${modalMove  && 'break-task-move'}
@@ -140,7 +136,7 @@ return <div className={`
           className="flex items-start gap-4 hover:bg-black p-[18px]">
               <div className={`flex h-8 w-8 shrink-0 items-center justify-center 
               rounded-full ${task.completed ? 'bg-green-500' : 'bg-[rgb(28,21,87)] hover:bg-red-500' }` 
-              }  onClick={() => completeBreakTaskFunction(task)}
+              } 
               >
                 <svg
                   stroke="white"

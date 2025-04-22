@@ -1,16 +1,12 @@
 import { createContext, useState, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
 import { useGetProfileQuery } from '../redux/authApi/authApi'; 
-import { TaskType } from '../types/TaskType';
+import { setSignalOpenAssignTaskType, TaskType } from '../types/TaskType';
 interface UserContextType {
     id: string;
     setDeleteOrEditSignal: React.Dispatch<React.SetStateAction<string>>,
     deleteOrEditSignal:string
-    setSignalOpenAssignTask:React.Dispatch<React.SetStateAction<{ 
-        signal: boolean; 
-        userId: string;
-        taskId:string;
-    }>>
-    signalOpenAssignTask:{ signal:boolean, userId:string, taskId:string };
+    setSignalOpenAssignTask:React.Dispatch<React.SetStateAction<setSignalOpenAssignTaskType>>
+    signalOpenAssignTask:setSignalOpenAssignTaskType;
     setMainTask: React.Dispatch<React.SetStateAction<TaskType | undefined>>;
     mainTask: TaskType | undefined;
     setBreakTaskChangeSignal:React.Dispatch<React.SetStateAction<boolean>>;

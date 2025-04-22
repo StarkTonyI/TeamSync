@@ -10,10 +10,11 @@ import { CommandListType } from '../FindCommandModal';
 interface TeamModalProps {
   isOpen: boolean;
   onClose: () => void;
-  commandList:CommandListType[]
+  commandList:CommandListType[];
+  type:string
 }
 
-const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose, commandList }) => {
+const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose, commandList, type }) => {
   const [selectedTeam, setSelectedTeam] = useState<typeof commandList[0] | null>(null);
 
   const handleTeamClick = (team: typeof commandList[0]) => {
@@ -25,71 +26,58 @@ const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose, commandList }) =
     onClose();
   };
 
-/*
-  admin: string;
-  commandDescription: string;
-  commandMemberNumber: string;
-  commandName: string;
-  commandTask: string;
-  notification: []
-  users: []
-  _id: string
-*/
-
-/*
-     id: 5,
-    name: 'Product Visionaries',
-    image: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=800&auto=format',
-    description: 'We craft exceptional digital products with a relentless focus on user experience and business impact.',
-    members: 9,
-    tags: ['Product', 'UX', 'Strategy'],
-    openPositions: 2
-*/
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => {
       if (!open) handleClose();
     }}>
-      <DialogContent className="bg-card border-border p-0 max-w-5xl max-h-[85vh] overflow-auto rounded-xl z-[1200]">
-        <div className="relative w-full h-full overflow-auto">
-          <button 
-            onClick={handleClose} 
-            className="absolute top-4 right-4 z-50 p-2 rounded-full bg-muted/50 backdrop-blur-md hover:bg-muted transition-colors"
-            aria-label="Close dialog"
-          >
-            <X className="h-5 w-5" />
-          </button>
-          
-          <div className="flex flex-col md:flex-row h-full">
-         
-            <div className={`w-full ${selectedTeam ? 'md:w-1/2 border-r border-border' : ''} overflow-y-auto p-6`}>
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold">Available Teams</h2>
-                <p className="text-muted-foreground mt-2">
-                  Explore and join teams that match your interests and skills
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-1 gap-4">
-                {commandList.map((team) => (
-                  <TeamCard 
-                    key={team._id} 
-                    team={team} 
-                    onClick={() => handleTeamClick(team)}
-                    isActive={selectedTeam?._id === team._id}
-                  />
-                ))}
-              </div>
-            </div>
-            
-            {selectedTeam && (
-              <div className="w-full md:w-1/2 overflow-y-auto animate-slide-right">
-                <TeamDetails team={selectedTeam} />
-              </div>
-            )}
-          </div>
-        </div>
-      </DialogContent>
+<DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-slate-700 p-0 max-w-5xl max-h-[85vh] overflow-auto rounded-xl z-[1200] shadow-2xl shadow-slate-900/50">
+
+<div className="relative w-full h-full overflow-auto">
+
+  <button 
+    onClick={handleClose} 
+    className="absolute top-4 right-4 z-50 p-2.5 rounded-full bg-slate-800/90 backdrop-blur-lg hover:bg-slate-700 transition-all duration-300 shadow-md hover:shadow-lg shadow-slate-900/30 hover:scale-105"
+    aria-label="Close dialog"
+  >
+    <X className="h-6 w-6 text-slate-200 stroke-[1.5]" />
+  </button>
+
+  <div className="flex flex-col md:flex-row h-full">
+
+    <div className={`w-full ${selectedTeam ? 'md:w-1/2 border-r border-slate-700' : ''} overflow-y-auto p-6`}>
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-slate-100 tracking-tight">
+          Available { type === 'user' ? 'teams' : 'users' }
+        </h2>
+        <p className="text-slate-400 mt-2 text-[0.925rem] leading-relaxed">
+         Explore and join { type === 'user' ? 'teams' : 'users' } that match your interests and skills
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4">
+        {commandList.map((team) => (
+          <TeamCard 
+            key={team._id} 
+            team={team} 
+            onClick={() => handleTeamClick(team)}
+            isActive={selectedTeam?._id === team._id}
+          />
+        ))}
+      </div>
+    </div>
+
+    {selectedTeam && (
+      <div className="w-full md:w-1/2 overflow-y-auto animate-slide-right bg-gradient-to-b from-slate-900/30 to-transparent">
+        <TeamDetails 
+          team={selectedTeam} 
+        />
+      </div>
+    )}
+
+  </div>
+</div>
+</DialogContent>
 
     </Dialog>
   );

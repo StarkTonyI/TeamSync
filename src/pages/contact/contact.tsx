@@ -1,7 +1,7 @@
 import '../UserPage/UserPage.css';
 import { cn } from '../../uiCompoents/lib/utils';
 import userPage from '../../images/user.png'
-import { Contact } from '../new-chat-page/Chat';
+import { Contact } from '../../types/TaskType';
 
 interface ContactProps {
   contact: string;
@@ -14,7 +14,7 @@ export default function ContactPerson({ contact, onClick, status, contactId }: C
 
 return (
     <button
-    onClick={() => onClick({ id:contactId, name:contact, status:status,  })}
+    onClick={() => onClick({ id:contactId, name:contact, status:status })}
     className="border border-white w-full p-4 flex items-center gap-3 
       hover:bg-secondary transition-colors duration-200"
  

@@ -50,7 +50,6 @@ router.post('/analyzeTask/:id',async (req, res)=>{
             return res.status(212).json(createModel);
         } 
 
-
         findUser.mainTask = findUser.mainTask.map(task => {
             const totalTask = task.userId.length;
             const completedTask = task.userId.filter(i => i.completed == 'true').length;
@@ -62,13 +61,30 @@ router.post('/analyzeTask/:id',async (req, res)=>{
         });
   
 
-
         const existingTaskIds = new Set(totalTask.allTask.map(task => task._id.toString()));
 
         const allTask = findUser?.mainTask.filter(task => !existingTaskIds.has(task._id.toString()));
 
+        
+        /*
+         totalTask.allTask.forEach(task1 => {
+        const task2 = findUser?.mainTask.find(task => task._id.toString() === task1._id.toString());
+  
+        if (task2) {
+        const existingUserIds = totalTask.allTask?.users?.map(u => u?.id) || [];
+
+        task2.userId.forEach(user => {
+        if (!existingUserIds.includes(user.id)) {
+        task1.users.push(user);
+      }
+    });
+  }
+});
+        */
+
+
         const optimizedTask = allTask?.map(({ _id, deadline, completed }) => 
-            ({ _id, completed, deadline, day, month, year, status:'user' }));
+            ({ _id, completed, deadline, day, month, year, status:'user', deleted:false, creatAt:now }));
 
         if (optimizedTask.length) {
             totalTask.allTask.push(...optimizedTask);
@@ -78,11 +94,13 @@ router.post('/analyzeTask/:id',async (req, res)=>{
 
         const completeUpdateArray = updateArrayStatus(firstArray, secondArray);
 
+
+
         totalTask.allTask = completeUpdateArray;
 
     
 
-        await totalTask.save();
+       await totalTask.save();
 
         res.status(200).json(totalTask);
 

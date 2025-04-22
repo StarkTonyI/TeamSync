@@ -26,7 +26,6 @@ const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose, commandList }) =
     onClose();
   };
 
-
   return (
     <Dialog open={isOpen} onOpenChange={(open) => {
       if (!open) handleClose();
@@ -45,7 +44,7 @@ const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose, commandList }) =
             {/* Teams list */}
             <div className={`w-full ${selectedTeam ? 'md:w-1/2 border-r border-border' : ''} overflow-y-auto p-6`}>
               <div className="mb-8">
-                <h2 className="text-2xl font-bold">Available Teams</h2>
+                <h2 className="text-2xl font-bold">Available Users</h2>
                 <p className="text-muted-foreground mt-2">
                   Explore and join teams that match your interests and skills
                 </p>

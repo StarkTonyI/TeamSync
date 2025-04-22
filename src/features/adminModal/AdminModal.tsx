@@ -9,12 +9,14 @@ import userPng from '../../images/user.png';
 import DeleteUserModal from '../deleteUserModal/DeleteUserModal';
 import { useDeleteUserMutation } from '../../redux/adminApi/adminApi';
 import { logoType } from '../../types/TaskType';
+
 interface adminModalType {
   member: {
     login: string,
     id: string,
     username: string,
-    role: string
+    role: string,
+    _id: string
   };
   logo:logoType[];
   editOrDelete:string;
@@ -45,6 +47,7 @@ const AdminModal = ({ member, logo, editOrDelete }:adminModalType) => {
     const { data } = await user(member.id);
     setMemberFull(data);
   }
+  
   const deleteUserFunction = async(id:string) =>{
     try{
       await deleteUser(id);

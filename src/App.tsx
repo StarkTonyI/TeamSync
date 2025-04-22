@@ -1,20 +1,20 @@
-import { Routes, Route } from 'react-router-dom'
-import UserPage from './pages/UserPage/UserPage'
-import AdminPage from './pages/adminpage/adminPage';
+import { Routes, Route } from 'react-router-dom';
 import { UserProvider } from './userContext/userContext';
-import AnalyzePage from './pages/analyzePage/AnalyzePage.tsx';
 import UserProfile from './pages/UserProfile/userProfile.tsx';
 import CreateCommandPage from './pages/createCommand/CreateCommand.tsx.tsx';
 import BigHomePage from './pages/BigHomePage/BigHomePage.tsx.tsx';
 import Instructions from './pages/instructions/InstructionPage.tsx';
 import WrongWay from './pages/wrong-way/WrongWay.tsx';
-import ProtectedRoute from './features/protectedRoute/protectedRoute.tsx';
+import { ProtectedRouteCommand, ProtectedRouteRole } from './features/protectedRoute/protectedRoute.tsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { initAuth } from './redux/reduxSlice/authSlice.ts';
 import { AppDispatch } from './redux/store.ts';
 import ProtectedBothRoute from './features/protecteBothRoute/protecteBothRoute.tsx';
- 
+import Dashboard from './updateDesign/updateDesign.tsx';
+import UserMainPage from './userUpdateDesign/userUpdateDesign.tsx';
+import UpdatedAnalyzPage from './pages/updatedAnalyzePage/AnalyzepageDashboard.tsx';
+
 export default function App() {
 
     const dispatch = useDispatch<AppDispatch>();
@@ -34,33 +34,40 @@ export default function App() {
 
   const user = JSON.parse(localStorage.getItem("role") || "null") || authRole;
  
-return <UserProvider>
-   <Routes>
-        <Route path='/' element={<BigHomePage/>}/>
-        <Route path="/login" element={<BigHomePage />} />
-        <Route path="/register" element={<BigHomePage />} />
-        
-        <Route >
-          <Route path='/instruction' element={<Instructions/>}/>
-        </Route>
-    
-        <Route element={<ProtectedBothRoute user={user}/>}>
-          <Route path='/analyze' element={<AnalyzePage/>} />
-          <Route path='/profile' element={<UserProfile/>} /> 
-        </Route>
+return (
+  <UserProvider>
+    <Routes>
+      <Route path="/" element={<BigHomePage />} />
+      <Route path="/login" element={<BigHomePage />} />
+      <Route path="/register" element={<BigHomePage />} />
+      <Route />
 
-        <Route element={<ProtectedRoute user={user} role="user" />}>
-          <Route path="/user" element={<UserPage />} />
-        </Route>
-       
-        <Route element={<ProtectedRoute user={user} role="admin" />}>
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path='/admin/create/command' element={<CreateCommandPage/>} />
-        </Route>
-       
-        <Route path="*" element={<WrongWay />} />
-    
+      <Route element={<ProtectedBothRoute user={user} />}></Route>
+
+      <Route path="/instruction" element={<Instructions />} />
+      <Route path="/analyze" element={<UpdatedAnalyzPage />} />
+      <Route path="/profile" element={<UserProfile />} />
+
+      <Route element={<ProtectedRouteRole user={user} role="user" />}>
+        <Route path="/user" element={<UserMainPage />} />
+      </Route>
+
+      <Route element={<ProtectedRouteRole user={user} role="admin" />}>
+        <Route path="/admin" element={<Dashboard />} />
+
+        <Route
+          path="/admin/create/command"
+          element={
+            <ProtectedRouteCommand>
+              <CreateCommandPage />
+            </ProtectedRouteCommand>
+          }
+        />
+      </Route>
+
+      <Route path="*" element={<WrongWay />} />
     </Routes>
-</UserProvider>
+  </UserProvider>
+);
 
 }

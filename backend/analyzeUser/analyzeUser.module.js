@@ -37,6 +37,23 @@ const analyzeTaskSchema =  new mongoose.Schema({
             type:String,
             required:false
           },
+          deleted:{
+            type:Boolean,
+            required:false
+          },
+          completedDate:[{
+            id:String,
+            date:Date, 
+            completed:Boolean
+          }],
+          users:[{
+            userId:String,
+            completed:Boolean
+          }],
+          creatAt:{
+            type: Date,
+            required:true
+          }
         },
       ]
 })

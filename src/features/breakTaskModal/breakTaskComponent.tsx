@@ -4,11 +4,12 @@ import { AppDispatch } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { breakTaskState, deleteBreakTask, fetchBreakTask,
    isEditTask, makeCompleteBreakTask } from "../../redux/reduxSlice/breakTaskSlice";
-import { Task } from "../../taskDashboard/types/task";
+import { Task } from "../../types/task";
 import { useContext, useEffect, useState } from "react";
 import DeleteButton from "../deleteButton/deleteButton";
 import EditButton from "../editButton/editButton";
 import { motion } from "framer-motion";
+import { createPortal } from "react-dom";
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -84,18 +85,17 @@ const completeBreakTaskFunction = (task:Task, taskType:string) => {
     setTasks({ ...task, completed:true });
   }
 }
+
+
   if (!isOpen) return null;
-  return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center 
-    justify-center p-4 z-[1000]" onClick={onClose}>
-      
-      <div className="bg-modal-background rounded-xl border border-modal-border shadow-xl w-full 
+  return createPortal(
+    <div className="fixed w-full h-full inset-0 bg-black/60 backdrop-blur-sm flex items-center 
+    justify-center p-4 z-[9999]" onClick={onClose}>
+ <div className="bg-modal-background rounded-xl border border-modal-border shadow-xl w-full 
       max-w-lg animate-scale-in" onClick={(e)=>e.stopPropagation()}>
   <div className="flex justify-between items-center p-6 border-b border-modal-border">
   <div className="max-w-[80%]"> 
-    <span className="text-xs font-medium text-success-light px-3 py-1 bg-success-light/10 rounded-full">
-      In Progress
-    </span>
+    
 
     <motion.p
       className="cursor-pointer text-white text-3xl font-bold hover:text-gray-600 break-words"
@@ -190,8 +190,9 @@ const completeBreakTaskFunction = (task:Task, taskType:string) => {
         </div>
 
       </div>
-    
-    </div>
+
+    </div>,
+    document.body
   );
 }; 
 

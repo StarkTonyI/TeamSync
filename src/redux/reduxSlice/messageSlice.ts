@@ -116,13 +116,14 @@ const messageSlice = createSlice({
                 state.loading = false;
             })
             .addCase(deleteMessageAsync.fulfilled, (state, action: PayloadAction<DeleteMessagePayload>) => {
-                const { messageDeleteArray, status } = action.payload;
+                const { messageDeleteArray } = action.payload;
+                console.log(action.payload)
                 const currentMainTask = JSON.parse(JSON.stringify(state.messagesState));
-                if(!status){
-                    // @ts-ignore
+                if(messageDeleteArray.length > 0){
+                //@ts-ignore
                 const deleteMessage = removeItemsById(currentMainTask, messageDeleteArray); state.messagesState = deleteMessage
-               
                 }
+                
             })
             .addCase(deleteMessageAsync.rejected, (_, action) => {
                 console.error('Error deleting message:', action.payload);

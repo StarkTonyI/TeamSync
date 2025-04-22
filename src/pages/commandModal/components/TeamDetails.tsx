@@ -45,77 +45,96 @@ useEffect(()=>{
   };
 
   return (
-    <div className="p-6 h-full">
-      <div className="relative w-full h-48 rounded-xl overflow-hidden mb-6">
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10"></div>
-        <img 
-          src={team.file ? `https://working-project-teamsync.up.railway.app/uploads/${team.file}` : TeamPage}
-          alt={team.commandName} 
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-      </div>
-      
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-3xl font-bold">{team.commandName}</h2>
-          
-          <div className="flex items-center mt-2 text-muted-foreground">
-            <Users className="h-5 w-5 mr-2" />
-            <span>{team.users.length} members</span>
-            <span className="mx-2">•</span>
-            <span>{team.commandMemberNumber} open position</span>
-          </div>
-        </div>
-        
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-lg font-medium">
-            <Info className="h-5 w-5 text-primary" />
-            <h3>About This Team</h3>
-          </div>
-          <p className="text-muted-foreground leading-relaxed">
-            {team.commandDescription}
-          </p>
-        </div>
-        
-        <div className="space-y-3">
-          <h3 className="text-lg font-medium">Expertise</h3>
-          <div className="flex flex-wrap gap-2">
-      
-          </div>
-        </div>
-        
-        <div className="glass-morphism rounded-xl p-6 mt-6">
-          <h3 className="text-lg font-medium mb-2">Looking for new members</h3>
-          <p className="text-muted-foreground mb-4">
-            This team is actively recruiting {team.commandMemberNumber} new member to join their projects.
-          </p>
-          
-          <Button
-            onClick={handleJoinTeam}
-            disabled={hasJoined}
-            className={`
-              w-full py-6 text-lg transition-all duration-300 rounded-xl
-              ${hasJoined 
-                ? 'bg-green-500/20 text-green-500 hover:bg-green-500/20' 
-                : 'bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 button-glow'}
-            `}
-          >
-            {hasJoined ? (
-              <>
-                <Check className="mr-2 h-5 w-5" />
-                Joined Team
-              </>
-            ) : (
-              <>
-                <Plus className="mr-2 h-5 w-5" />
-                Join Team
-              </>
-            )}
-          </Button>
-        </div>
+    <div className="p-6 h-full bg-gradient-to-br from-slate-900/50 to-slate-800/30 backdrop-blur-lg">
+    <div className="relative w-full h-48 rounded-xl overflow-hidden mb-6 group">
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent z-10" />
+      <img 
+        src={team.file ? `https://working-project-teamsync.up.railway.app/uploads/${team.file}` : TeamPage}
+        alt={team.commandName} 
+        className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+        loading="lazy"
+      />
+      <div className="absolute bottom-4 left-4 z-20">
+        <span className="px-3 py-1.5 bg-slate-800/80 backdrop-blur text-slate-100 text-sm rounded-full border border-slate-700/50">
+          Team Spotlight
+        </span>
       </div>
     </div>
+    
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-3xl font-bold text-slate-100 tracking-tight mb-1">
+          {team.commandName}
+        </h2>
+        
+        <div className="flex items-center mt-2 text-slate-400">
+          <Users className="h-5 w-5 mr-2 text-slate-400/80" />
+          <span>{team.users.length} members</span>
+          <span className="mx-2 text-slate-600">•</span>
+          <span className="text-emerald-400/90 font-medium">
+            {team.commandMemberNumber} open position
+          </span>
+        </div>
+      </div>
+      
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-lg font-medium">
+          <Info className="h-6 w-6 text-blue-400/90" />
+          <h3 className="text-slate-100">About This Team</h3>
+        </div>
+        <p className="text-slate-300 leading-relaxed text-[0.95rem] tracking-wide">
+          {team.commandDescription}
+        </p>
+      </div>
+      
+      <div className="space-y-3">
+        <h3 className="text-lg font-medium text-slate-100">Expertise</h3>
+        <div className="flex flex-wrap gap-2">
+          {/* Добавьте теги экспертиз при необходимости */}
+        </div>
+      </div>
+      
+      <div className="rounded-xl p-6 mt-6 bg-slate-800/50 backdrop-blur-lg border border-slate-700/50 shadow-xl shadow-slate-900/20">
+        <h3 className="text-lg font-medium text-slate-100 mb-3">
+          Looking for new members
+        </h3>
+        <p className="text-slate-300/90 mb-5 text-[0.95rem] leading-relaxed">
+          This team is actively recruiting {team.commandMemberNumber} new member to join their projects.
+        </p>
+        
+        <Button
+          onClick={handleJoinTeam}
+          disabled={hasJoined}
+          className={`
+            w-full py-5 text-lg transition-all duration-300 rounded-xl
+            relative overflow-hidden
+            ${hasJoined 
+              ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 cursor-default' 
+              : `
+                bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-500 
+                shadow-lg shadow-blue-500/20 
+                hover:shadow-xl hover:shadow-blue-500/30
+                hover:-translate-y-0.5
+              `
+            }
+          `}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10 opacity-0 hover:opacity-100 transition-opacity" />
+          {hasJoined ? (
+            <>
+              <Check className="mr-2 h-5 w-5" />
+              <span className="relative">Joined Team</span>
+            </>
+          ) : (
+            <>
+              <Plus className="mr-2 h-5 w-5" />
+              <span className="relative">Join Team</span>
+            </>
+          )}
+        </Button>
+      </div>
+    </div>
+  </div>
   );
 };
 
