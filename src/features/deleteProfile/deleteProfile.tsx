@@ -20,9 +20,7 @@ const DeleteProfile = ({ role, id }:DeleteProfileType ) => {
   const handleDelete = async() => {
   try {
     if(role == 'admin'){
-      
       await deleteProfile(id);
-      
       toast.success("Command successfully deleted", {
         description: "The command has been permanently removed",
         position: "bottom-center",
@@ -30,6 +28,7 @@ const DeleteProfile = ({ role, id }:DeleteProfileType ) => {
       localStorage.removeItem('role');
       setTimeout(()=>{
         navigate('/')
+        window.location.reload()
       }, 300);
 
     } else if(role == 'user'){
@@ -40,7 +39,8 @@ const DeleteProfile = ({ role, id }:DeleteProfileType ) => {
     });
     localStorage.removeItem('role');
     setTimeout(()=>{
-      navigate('/')
+      navigate('/');
+      window.location.reload()
     }, 300);
 }
     setIsDeleteModalOpen(false);
@@ -66,10 +66,11 @@ const DeleteProfile = ({ role, id }:DeleteProfileType ) => {
      
       
       <DeleteModal 
+        type="profile"
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onDelete={handleDelete}
-        commandName="Deploy Workflow"
+        commandName="Your profile"
       />
     </div>
   );

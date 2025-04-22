@@ -318,20 +318,21 @@ export const ProcessRow = ({ pid, name, user, completedUsers, memory, status }:{
   memory: React.ReactNode
   status: boolean
 }) => (
-  <div className="grid grid-cols-12 items-center py-2 px-3 text-sm hover:bg-slate-800/50 min-w-[500px] sm:min-w-0">
+  <div className="grid grid-cols-12 items-center py-2 px-3 
+  text-sm hover:bg-slate-800/50 min-w-[500px] sm:min-w-0">
     {/* Индекс */}
     <div className="col-span-2 sm:col-span-1 text-xs sm:text-sm text-slate-500">
       {pid}
     </div>
 
     {/* Название */}
-    <div className="col-span-6 sm:col-span-3 text-xs sm:text-sm text-slate-300 break-words pr-2">
-      {name}
+    <div className="col-span-3 sm:col-span-3 text-xs sm:text-sm text-slate-300 break-words pr-2">
+      {TruncateText(name, 10)}
     </div>
 
     {/* Участники (только на десктопе) */}
     <div className="hidden sm:block col-span-2 text-slate-400">
-      {user}
+      { user }
     </div>
 
     {/* Прогресс (только на десктопе) */}
@@ -339,13 +340,12 @@ export const ProcessRow = ({ pid, name, user, completedUsers, memory, status }:{
       {completedUsers}%
     </div>
 
-    {/* Время (только на десктопе) */}
-    <div className="hidden sm:block col-span-2 text-purple-400 text-xs sm:text-sm">
+    <div className="sm:block col-span-2 text-purple-400 text-xs sm:text-sm">
       {memory}
     </div>
 
     {/* Статус */}
-    <div className="col-span-4 sm:col-span-1 ml-3">
+    <div className="col-span-1 sm:col-span-1 ml-3">
       <Badge 
         variant="outline"
         className={`

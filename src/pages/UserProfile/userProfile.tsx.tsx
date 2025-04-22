@@ -270,6 +270,7 @@ const UserProfile = () => {
       <DeleteCommand 
         role={data?.role} 
         id={data?.id}
+        
        
       />
     </div>

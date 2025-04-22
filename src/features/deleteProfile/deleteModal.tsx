@@ -10,9 +10,10 @@ import {
    onClose: () => void;
    onDelete: () => void;
    commandName?: string;
+   type:string;
  }
  
- const DeleteModal = ({ isOpen, onClose, onDelete, commandName = "this command" }: DeleteModalProps) => {
+ const DeleteModal = ({ isOpen, onClose, onDelete, commandName = "this command", type }: DeleteModalProps) => {
    return (
      <AlertDialog open={isOpen} onOpenChange={onClose}>
        <AlertDialogContent className="bg-[#1A1F2C] border border-[#403E43]/50 text-white max-w-md w-full shadow-[0_0_25px_rgba(0,0,0,0.3)] backdrop-blur-sm animate-in fade-in-0 zoom-in-95 slide-in-from-center duration-150">
@@ -24,7 +25,7 @@ import {
          
          <AlertDialogHeader className="pt-6">
            <AlertDialogTitle className="text-xl font-semibold text-white text-center">
-             Delete Command
+             Delete { type === 'command' ?  'Command' : 'Profile'}
            </AlertDialogTitle>
            <AlertDialogDescription className="text-gray-300 text-center mt-2">
              Are you sure you want to delete <span className="text-[#9b87f5] font-medium">{commandName}</span>?

@@ -17,7 +17,6 @@ import {
 
 import { Button } from "../../uiCompoents/ui/button";
 import FeatureCard from "./components/FeatureCard";
-import InstructionHeader from "./components/InstructionHeader";
 import pencillPNG from '../../images/pencil.png';
 import trashPNG from '../../images/delete.png';
 import UserJoinCommandModal from '../../images/UserJoinCommandModal.png';
@@ -283,8 +282,8 @@ const filteredItems = filterFeatures.filter(({ title, description }) =>
 
   return (
     <DashboardLayout>
-<div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-gray-900 text-gray-100">
-  <InstructionHeader />
+<div className="min-h-screen bg-gradient-to-br md:mt-0 from-gray-900 via-gray-950 to-gray-900 text-gray-100 mt-4">
+
 
   <main className="container mx-auto px-4 py-12">
     <section className="mb-20 text-center">

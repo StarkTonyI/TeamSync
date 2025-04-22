@@ -131,11 +131,11 @@ const TeamForm: React.FC = () => {
           <div className="space-y-3">
             <Label htmlFor="name" className="flex items-center gap-2 text-slate-300">
               <Hash className="h-4 w-4 text-blue-400" />
-              Team Identity
+              Team name
             </Label>
             <Input
               name="commandName"
-              placeholder="CyberNova Squad"
+              placeholder="Team name"
               value={formData.commandName}
               onChange={handleChange}
               className="bg-slate-800/50 border-slate-700 focus:border-blue-400/50 rounded-xl h-12 px-4 text-slate-200 placeholder-slate-500 focus:ring-0"
@@ -145,11 +145,11 @@ const TeamForm: React.FC = () => {
           <div className="space-y-3">
             <Label htmlFor="task" className="flex items-center gap-2 text-slate-300">
               <Target className="h-4 w-4 text-purple-400" />
-              Mission Objective
+              Team goal
             </Label>
             <Input
               name="commandTask"
-              placeholder="Develop next-gen AI solutions"
+              placeholder="Describe the team's goals in more detail."
               value={formData.commandTask}
               onChange={handleChange}
               className="bg-slate-800/50 border-slate-700 focus:border-purple-400/50 rounded-xl h-12 px-4 text-slate-200 placeholder-slate-500 focus:ring-0"
@@ -159,7 +159,7 @@ const TeamForm: React.FC = () => {
           <div className="space-y-3">
             <Label htmlFor="description" className="flex items-center gap-2 text-slate-300">
               <FileText className="h-4 w-4 text-amber-400" />
-              Team Manifesto
+              Team Description
             </Label>
             <Textarea
               name="commandDescription"

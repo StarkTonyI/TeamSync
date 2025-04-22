@@ -69,8 +69,9 @@ const DeleteCommand = ({ role, id }:DeleteCommandType) => {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onDelete={handleDelete}
-        commandName="Deploy Workflow"
+        commandName="Your command"
         role={role}
+        
       />
     </div>
   );

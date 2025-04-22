@@ -131,7 +131,8 @@ router.put('/create/task/:id', async(req, res)=>{
         deadline:data.deadline,
         status:'todo',
         progress:0,
-        priority:data.priority
+        priority:data.priority,
+        creatAt:new Date()
     }   
     if(taskType == 'breakTask'){
          const updateTask = await User.findByIdAndUpdate(userData.id, 

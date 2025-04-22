@@ -12,11 +12,11 @@ return <div className="bg-slate-800/30 rounded-lg border border-slate-700/50 ove
 <div className="overflow-x-auto">
   {/* Заголовки таблицы */}
   <div className="grid grid-cols-12 text-xs text-slate-400 p-3 border-b border-slate-700/50 bg-slate-800/50 min-w-[500px]">
-    <div className="col-span-2 sm:col-span-1">Index</div>
-    <div className="col-span-6 sm:col-span-3">Name</div>
+  <div className="col-span-2 sm:col-span-1">Index</div>
+    <div className="col-span-3 sm:col-span-3">Name</div>
     <div className="hidden sm:block col-span-2">Participants</div>
     <div className="hidden sm:block col-span-2">Progress</div>
-    <div className="hidden sm:block col-span-2">Time</div>
+    <div className="sm:block col-span-2">Time</div>
     <div className="col-span-4 sm:col-span-1">Completed</div>
   </div>
 
