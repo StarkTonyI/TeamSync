@@ -1,0 +1,80 @@
+.profile-card {
+    background-color: rgba(36, 40, 50, 1);
+    background-image: linear-gradient(
+      139deg,
+      rgba(36, 40, 50, 1) 0%,
+      rgba(36, 40, 50, 1) 0%,
+      rgba(37, 28, 40, 1) 100%
+    );
+  
+    border-radius: 10px;
+    padding: 5px 0px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    gap: 5px;
+    right: 4%;
+    z-index: 1200;
+  }
+  
+  .profile-card .profile-separator {
+    border-top: 1.5px solid #42434a;
+  }
+  
+  .profile-card .profile-list {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0px 5px;
+    min-width: 130px;
+  }
+  
+  .profile-card .profile-list .profile-element {
+    display: flex;
+    align-items: center;
+    color: #7e8590;
+    gap: 10px;
+    transition: all 0.3s ease-out;
+    padding: 4px 7px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .profile-card .profile-list .profile-element svg {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease-out;
+  }
+  
+  .profile-card .profile-list .profile-element .profile-label {
+    font-weight: 100;
+  }
+  
+  .profile-card .profile-list .profile-element:hover {
+    background-color: #5353ff;
+    color: #ffffff;
+    transform: translate(1px, -1px);
+  }
+  .profile-card .profile-list .profile-delete:hover {
+    background-color: #8e2a2a;
+  }
+  
+  .profile-card .profile-list .profile-element:active {
+    transform: scale(0.99);
+  }
+  
+  .profile-card .profile-list:not(:last-child) .profile-element:hover svg {
+    stroke: #ffffff;
+  }
+  
+  .profile-card .profile-list:last-child svg {
+    stroke: #bd89ff;
+  }
+  .profile-card .profile-list:last-child .profile-element {
+    color: #bd89ff;
+  }
+  
+  .profile-card .profile-list:last-child .profile-element:hover {
+    background-color: rgba(56, 45, 71, 0.836);
+  }
