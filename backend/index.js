@@ -33,6 +33,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+  console.log('FRONTEND_URL from env:', process.env.FRONTEND_URL);
+
 /*
 app.options('*', (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
