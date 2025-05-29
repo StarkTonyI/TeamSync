@@ -149,15 +149,12 @@ router.post('/profile/upload', authMiddleware, upload.single("image"), async(req
     try {
     
     const userToken = req.user; 
-     const imageUrl = `https://working-project-teamsync.up.railway.app/uploads/${req.file.filename}`;
-    
-     const newImage = await userModel.findByIdAndUpdate(
+    const imageUrl = `https://working-project-teamsync.up.railway.app/uploads/${req.file.filename}`;
+    const newImage = await userModel.findByIdAndUpdate(
         userToken.id, 
         { $set: { imageUrl: imageUrl } }, 
         { new: true } 
     );
-
-  
     res.status(200).json(newImage);
 
 } catch(err){

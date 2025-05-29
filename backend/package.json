@@ -26,10 +26,10 @@
   
     
   
-  "start": "node index.js",
+  "start": "node dist/main.js",
   
   
-    
+  "build": "echo 'Nothing to build for Express, moving on...'",
   
   "test": "echo \"Error: no test specified\" && exit 1"
   
