@@ -149,7 +149,7 @@ router.post('/profile/upload', authMiddleware, upload.single("image"), async(req
     try {
     
     const userToken = req.user; 
-    const imageUrl = `https://working-project-teamsync.up.railway.app/uploads/${req.file.filename}`;
+    const imageUrl = `https://teamsync-qfqf.onrender.com/uploads/${req.file.filename}`;
     const newImage = await userModel.findByIdAndUpdate(
         userToken.id, 
         { $set: { imageUrl: imageUrl } }, 

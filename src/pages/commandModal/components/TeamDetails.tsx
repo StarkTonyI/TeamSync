@@ -49,7 +49,7 @@ useEffect(()=>{
     <div className="relative w-full h-48 rounded-xl overflow-hidden mb-6 group">
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent z-10" />
       <img 
-        src={team.file ? `https://working-project-teamsync.up.railway.app/uploads/${team.file}` : TeamPage}
+        src={team.file ? `https://teamsync-qfqf.onrender.com/uploads/${team.file}` : TeamPage}
         alt={team.commandName} 
         className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
         loading="lazy"

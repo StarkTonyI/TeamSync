@@ -42,7 +42,7 @@ onClick={onClick}
 <div className="flex space-x-4 relative z-10">
   <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
     <img
-      src={team.file ? `https://working-project-teamsync.up.railway.app/uploads/${team.file}` : TeamPage}
+      src={team.file ? `https://teamsync-qfqf.onrender.com/${team.file}` : TeamPage}
       alt={team.commandName}
       className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-110"
       loading="lazy"
