@@ -27,9 +27,10 @@ export default function App() {
     }, [dispatch]);
 
     if (loading) {
-        return <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
-          ⏳ Loading...
-        </div>;  // Не рендерим приложение, пока не обновился токен
+        return <div className='absolute gap-2 flex flex-col top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+          <span>⏳Loading...</span>
+          <span className='text-gray-700'>The first boot will take some time...</span>
+        </div>;  
     }
 
   const user = JSON.parse(localStorage.getItem("role") || "null") || authRole;
