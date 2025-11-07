@@ -29,7 +29,7 @@ export default function App() {
     if (loading) {
         return <div className='absolute gap-2 flex flex-col top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
           <span>⏳Loading...</span>
-          <span className='text-gray-700'>The first boot will take some time...</span>
+          <span className='text-gray-710'>The first boot will take some time...</span>
         </div>;  
     }
 
